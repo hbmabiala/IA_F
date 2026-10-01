@@ -2569,6 +2569,9 @@ def import_users():
         except Exception as err_sync:
             print(f"Warning sync_rule_assignments for user {uid}: {err_sync}")
 
+    # Persistance JSON automatique pour les nouveaux comptes utilisateurs
+    backup_database_to_json()
+
     return jsonify({
         'success': True,
         'total': len(created_users) + len(errors),
@@ -2624,6 +2627,9 @@ def update_user(id):
         # Réévaluation des règles pour cet utilisateur mis à jour
         sync_rule_assignments(user_id=id)
         
+        # Persistance JSON automatique
+        backup_database_to_json()
+        
         return jsonify({'success': True})
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
@@ -2650,6 +2656,10 @@ def delete_user(id):
     conn.execute('DELETE FROM user_course_progress WHERE user_id=?', (id,))
     conn.commit()
     conn.close()
+    
+    # Persistance JSON automatique après suppression
+    backup_database_to_json()
+    
     return jsonify({'success': True})
 
 # --- NOUVEAUX ENDPOINTS : GESTION DES RÈGLES D'ASSIGNATION AUTOMATIQUE (PARCOURS DYNAMIQUES) ---
