@@ -1,0 +1,257 @@
+<div id="admin-dashboard-view" style="width: 100%; max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column;">
+            <div class="header-bar" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 22px;">
+                <div>
+                    <h1 style="margin: 0; font-size: 24px; font-weight: 800; color: #0f172a;">Pilotage & Tableau de Bord Général</h1>
+                    <p style="margin: 4px 0 0 0; color: #64748b; font-size: 13.5px;">Mesure d'impact, conformité et suivi des apprentissages MALAM'IA.</p>
+                </div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button onclick="exportPilotageCSV()" class="submit-btn" style="width: auto; padding: 10px 18px; margin: 0; background: #000000; font-size: 13px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
+                        Exporter Pilotage (CSV)
+                    </button>
+                    <button onclick="loadAdminStatsV2()" class="action-btn-sm" style="padding: 10px 16px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; font-weight: 700; color: #334155; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+                        Actualiser
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filigrane animé officiel — Direction Innovation Digitale (Pilotage) -->
+            <div class="watermark-strip-animated watermark-dashboard" title="Direction Innovation Digitale - SGCI">
+                <div class="watermark-track">
+                    <span class="watermark-logo-txt">DIRECTION INNOVATION DIGITALE</span>
+                    <span class="watermark-sep">✦</span>
+                    <span class="watermark-copy">Pilotage & Formation Digitale • Tous droits réservés © Société Générale Côte d'Ivoire</span>
+                    <span class="watermark-sep">✦</span>
+                    <span class="watermark-logo-txt">DIRECTION INNOVATION DIGITALE</span>
+                    <span class="watermark-sep">✦</span>
+                    <span class="watermark-copy">Supervision LMS MALAM'IA • Tous droits réservés © SGCI</span>
+                </div>
+            </div>
+
+            <!-- Onglets de navigation du Dashboard Administrateur -->
+            <div class="catalog-tabs" style="display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; flex-wrap: wrap;">
+                <button class="catalog-tab-btn active" id="admin-tab-btn-overview" onclick="switchAdminDashboardTab('overview')">
+                    Indicateurs & Synthèse
+                </button>
+                <button class="catalog-tab-btn" id="admin-tab-btn-live" onclick="switchAdminDashboardTab('live')">
+                    Connectés en direct (<span id="admin-badge-live-count">0</span>)
+                </button>
+                <button class="catalog-tab-btn" id="admin-tab-btn-courses" onclick="switchAdminDashboardTab('courses')">
+                    Activité par Formation
+                </button>
+                <button class="catalog-tab-btn" id="admin-tab-btn-downloads" onclick="switchAdminDashboardTab('downloads')">
+                    Téléchargements
+                </button>
+                <button class="catalog-tab-btn" id="admin-tab-btn-individual" onclick="switchAdminDashboardTab('individual')">
+                    Suivi Individuel & Timeline
+                </button>
+                <button class="catalog-tab-btn" id="admin-tab-btn-overdue" onclick="switchAdminDashboardTab('overdue')">
+                    Alertes & Retards (<span id="admin-badge-overdue-count" style="color: #ef4444; font-weight: 800;">0</span>)
+                </button>
+            </div>
+
+            <!-- SECTION 1 : VUE D'ENSEMBLE & KPI CORPORATE (Section 18 & 21) -->
+            <div id="admin-sec-overview">
+                <!-- Grille principale de KPI -->
+                <div class="kpi-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; margin-bottom: 25px;">
+                    <div class="kpi-card" style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border-top: 4px solid #e9041e;">
+                        <h3 style="font-size: 13px; color: #64748b; margin: 0 0 8px 0; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Formations créées</h3>
+                        <p id="kpi-total" class="kpi-value" style="font-size: 28px; font-weight: 800; color: #000000; margin: 0;">0</p>
+                        <div style="font-size: 11.5px; color: #64748b; margin-top: 6px;">Total catalogue interne</div>
+                    </div>
+                    <div class="kpi-card" style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border-top: 4px solid #000000;">
+                        <h3 style="font-size: 13px; color: #64748b; margin: 0 0 8px 0; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Formations assignées</h3>
+                        <p id="kpi-assignees" class="kpi-value" style="font-size: 28px; font-weight: 800; color: #000000; margin: 0;">0</p>
+                        <div style="font-size: 11.5px; color: #64748b; margin-top: 6px;">Sous mandat obligatoire</div>
+                    </div>
+                    <div class="kpi-card" style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border-top: 4px solid #e9041e;">
+                        <h3 style="font-size: 13px; color: #64748b; margin: 0 0 8px 0; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Formations en retard</h3>
+                        <p id="kpi-retard" class="kpi-value" style="font-size: 28px; font-weight: 800; color: #e9041e; margin: 0;">0</p>
+                        <div style="font-size: 11.5px; color: #e9041e; margin-top: 6px; font-weight: 700;">Dépassement de 10 jours ouvrés</div>
+                    </div>
+                    <div class="kpi-card" style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border-top: 4px solid #000000;">
+                        <h3 style="font-size: 13px; color: #64748b; margin: 0 0 8px 0; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Taux de complétion</h3>
+                        <p id="kpi-completion-rate" class="kpi-value" style="font-size: 28px; font-weight: 800; color: #000000; margin: 0;">0%</p>
+                        <div style="font-size: 11.5px; color: #64748b; margin-top: 6px; font-weight: 600;">Parcours certifiés SGCI</div>
+                    </div>
+                    <div class="kpi-card" style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border-top: 4px solid #000000;">
+                        <h3 style="font-size: 13px; color: #64748b; margin: 0 0 8px 0; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Volume Horaire Total</h3>
+                        <p id="kpi-hours" class="kpi-value" style="font-size: 28px; font-weight: 800; color: #000000; margin: 0;">0 h</p>
+                        <div style="font-size: 11.5px; color: #64748b; margin-top: 6px;">Temps de formation cumulé</div>
+                    </div>
+                    <div class="kpi-card" style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border-top: 4px solid #e9041e;">
+                        <h3 style="font-size: 13px; color: #64748b; margin: 0 0 8px 0; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Score moyen examens</h3>
+                        <p id="kpi-avg-score" class="kpi-value" style="font-size: 28px; font-weight: 800; color: #e9041e; margin: 0;">0%</p>
+                        <div style="font-size: 11.5px; color: #64748b; margin-top: 6px;">QCM 70% + Oral 30%</div>
+                    </div>
+                </div>
+
+                <div class="kpi-details" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
+                    <div class="kpi-box" style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 22px;">
+                        <h3 style="margin: 0 0 16px 0; font-size: 16px; color: #0f172a; font-weight: 800;">Répartition par Niveau</h3>
+                        <ul id="kpi-levels" class="kpi-list" style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px;">
+                            <li>Débutant : <span>0</span></li>
+                            <li>Intermédiaire : <span>0</span></li>
+                            <li>Avancé : <span>0</span></li>
+                        </ul>
+                    </div>
+                    <div class="kpi-box" style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 22px; display:flex; flex-direction:column; align-items:center;">
+                        <h3 style="margin: 0 0 16px 0; font-size: 16px; color: #0f172a; font-weight: 800;">Formations par Domaine</h3>
+                        <div style="width: 250px; height: 250px;">
+                            <canvas id="domainChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 2 : UTILISATEURS CONNECTÉS EN DIRECT (Section 19) -->
+            <div id="admin-sec-live" style="display: none;">
+                <div style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 22px; box-shadow: 0 2px 10px rgba(0,0,0,0.03);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <div>
+                            <h3 style="margin: 0; font-size: 16px; color: #0f172a; font-weight: 800;">Utilisateurs Connectés Maintenant</h3>
+                            <span style="font-size: 12.5px; color: #64748b;">Mise à jour en temps réel (activité des 5 dernières minutes)</span>
+                        </div>
+                        <span id="live-users-pill" style="background: #fee2e2; color: #e9041e; font-size: 12px; font-weight: 700; padding: 5px 14px; border-radius: 20px; border: 1px solid #fca5a5;">
+                            ● 0 session(s) active(s)
+                        </span>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table class="styled-table" style="margin: 0;">
+                            <thead>
+                                <tr>
+                                    <th>Matricule</th>
+                                    <th>Collaborateur</th>
+                                    <th>Direction</th>
+                                    <th>Poste</th>
+                                    <th>Formation en cours</th>
+                                    <th>Module</th>
+                                    <th>Dernière activité</th>
+                                </tr>
+                            </thead>
+                            <tbody id="live-users-tbody">
+                                <tr><td colspan="7" style="text-align: center; color: #94a3b8; padding: 20px;">Aucun utilisateur en session actuellement.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 3 : ACTIVITÉ PAR FORMATION (Section 20) -->
+            <div id="admin-sec-courses" style="display: none;">
+                <div style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 22px; box-shadow: 0 2px 10px rgba(0,0,0,0.03);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+                        <h3 style="margin: 0; font-size: 16px; color: #0f172a; font-weight: 800;">Tableau de Bord par Formation</h3>
+                        <input type="text" id="filter-course-activity-input" placeholder="Filtrer par titre ou domaine..." oninput="filterCourseActivityTable()" style="padding: 8px 14px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; width: 280px;">
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table class="styled-table" style="margin: 0;">
+                            <thead>
+                                <tr>
+                                    <th>Formation</th>
+                                    <th>Domaine</th>
+                                    <th>Visibilité</th>
+                                    <th style="text-align: center;">Inscrits</th>
+                                    <th style="text-align: center;">Actifs</th>
+                                    <th style="text-align: center;">Direct</th>
+                                    <th style="text-align: center;">Progression moy.</th>
+                                    <th style="text-align: center;">Taux complétion</th>
+                                    <th style="text-align: center;">Taux abandon</th>
+                                </tr>
+                            </thead>
+                            <tbody id="courses-activity-tbody">
+                                <!-- Rempli dynamiquement -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 4 : TÉLÉCHARGEMENTS (Section 33) -->
+            <div id="admin-sec-downloads" style="display: none;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 22px;">
+                    <div style="background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; text-align: center; border-top: 3px solid #000000;">
+                        <div id="dl-kpi-total" style="font-size: 26px; font-weight: 800; color: #000000;">0</div>
+                        <div style="font-size: 12px; color: #64748b; font-weight: 600; margin-top: 4px;">Téléchargements totaux</div>
+                    </div>
+                    <div style="background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; text-align: center; border-top: 3px solid #000000;">
+                        <div id="dl-kpi-today" style="font-size: 26px; font-weight: 800; color: #000000;">0</div>
+                        <div style="font-size: 12px; color: #64748b; font-weight: 600; margin-top: 4px;">Aujourd'hui</div>
+                    </div>
+                    <div style="background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; text-align: center; border-top: 3px solid #e9041e;">
+                        <div id="dl-kpi-week" style="font-size: 26px; font-weight: 800; color: #e9041e;">0</div>
+                        <div style="font-size: 12px; color: #64748b; font-weight: 600; margin-top: 4px;">Cette semaine</div>
+                    </div>
+                    <div style="background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; text-align: center; border-top: 3px solid #000000;">
+                        <div id="dl-kpi-month" style="font-size: 26px; font-weight: 800; color: #000000;">0</div>
+                        <div style="font-size: 12px; color: #64748b; font-weight: 600; margin-top: 4px;">Ce mois</div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px;">
+                        <h4 style="margin: 0 0 14px 0; font-size: 15px; color: #0f172a; font-weight: 800;">Téléchargements par Formation</h4>
+                        <div id="dl-by-course-list" style="display: flex; flex-direction: column; gap: 8px;"></div>
+                    </div>
+                    <div style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px;">
+                        <h4 style="margin: 0 0 14px 0; font-size: 15px; color: #0f172a; font-weight: 800;">Téléchargements par Collaborateur</h4>
+                        <div id="dl-by-user-list" style="display: flex; flex-direction: column; gap: 8px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 5 : SUIVI INDIVIDUEL & TIMELINE (Section 23 & 24) -->
+            <div id="admin-sec-individual" style="display: none;">
+                <div style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 22px; margin-bottom: 22px;">
+                    <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 16px; flex-wrap: wrap;">
+                        <input type="text" id="admin-timeline-search" placeholder="Rechercher un collaborateur par matricule, nom ou email..." style="flex: 1; min-width: 260px; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13.5px;">
+                        <button onclick="searchUserForTimeline()" class="action-btn-sm" style="background: #0f172a; color: white; padding: 10px 20px; font-weight: 700; border-radius: 8px;">Rechercher la fiche</button>
+                    </div>
+
+                    <div id="admin-user-fiche-box" style="display: none; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px; margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                            <div>
+                                <h3 id="fiche-user-name" style="margin: 0; color: #0f172a; font-size: 18px; font-weight: 800;">-</h3>
+                                <div id="fiche-user-meta" style="color: #64748b; font-size: 13px; margin-top: 4px;">-</div>
+                            </div>
+                            <span id="fiche-user-badge" class="role-badge role-user">Collaborateur</span>
+                        </div>
+                    </div>
+
+                    <h4 style="margin: 0 0 14px 0; color: #0f172a; font-size: 15px; font-weight: 800;">Timeline Pédagogique Traçable</h4>
+                    <div id="admin-timeline-container" style="display: flex; flex-direction: column; gap: 12px;">
+                        <p style="color: #94a3b8; font-size: 13px;">Sélectionnez ou recherchez un collaborateur pour afficher son historique complet d'apprentissage.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 6 : ALERTES & RETARDS (Section 12) -->
+            <div id="admin-sec-overdue" style="display: none;">
+                <div style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 22px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <div>
+                            <h3 style="margin: 0; font-size: 16px; color: #b91c1c; font-weight: 800;">Collaborateurs en Retard sur leurs Formations</h3>
+                            <span style="font-size: 12.5px; color: #64748b;">Échéance de 10 jours ouvrés dépassée sans validation (Section 11 & 12)</span>
+                        </div>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table class="styled-table" style="margin: 0;">
+                            <thead>
+                                <tr>
+                                    <th>Matricule</th>
+                                    <th>Collaborateur</th>
+                                    <th>Direction / Poste</th>
+                                    <th>Formation</th>
+                                    <th>Assigné le</th>
+                                    <th>Échéance</th>
+                                    <th style="color: #ef4444;">Jours de retard</th>
+                                    <th style="text-align: center;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-overdue-tbody">
+                                <tr><td colspan="8" style="text-align: center; color: #000000; font-weight: 700; padding: 20px;">Aucun retard constaté. Toutes les échéances sont respectées.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>

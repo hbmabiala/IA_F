@@ -1,0 +1,344 @@
+    <div id="page-users" class="page active scrollable-page">
+        <div class="header-bar" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px;">
+            <div>
+                <h1>Gestion des Utilisateurs</h1>
+                <p style="color: #64748b; margin-top: 5px;">Créez et administrez les comptes collaborateurs de la plateforme.</p>
+            </div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button onclick="openBulkUserModal()" class="submit-btn" style="width: auto; padding: 11px 20px; margin: 0; background: #000000; font-size: 13px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px;">
+                    Importer des Utilisateurs (Fichier)
+                </button>
+                <button onclick="openCreateUserModal()" class="submit-btn" style="width: auto; padding: 11px 22px; margin: 0; background: #e9041e; font-size: 13px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px;">
+                    Nouvel Utilisateur
+                </button>
+            </div>
+        </div>
+
+        <!-- Table des utilisateurs existants -->
+        <div class="user-management-card" style="margin-top: 10px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px;">
+                <h3 style="margin: 0; color: #0f172a; font-size: 18px;">
+                    Répertoire des utilisateurs (<span id="users-count">0</span>)
+                </h3>
+                <div style="display: flex; gap: 10px; width: 320px;">
+                    <input type="text" id="user-search" placeholder="Rechercher par matricule, nom, poste..." oninput="filterUsersTable()" style="padding: 9px 14px; border: 1px solid #cbd5e1; border-radius: 6px; width: 100%; font-size: 13px; box-sizing: border-box;">
+                </div>
+            </div>
+            
+            <div style="overflow-x: auto;">
+                <table class="styled-table" id="users-table">
+                    <thead>
+                        <tr>
+                            <th>Matricule</th>
+                            <th>Nom & Prénom</th>
+                            <th>Direction</th>
+                            <th>Poste</th>
+                            <th>Statut</th>
+                            <th>Arrivée</th>
+                            <th>Rôle</th>
+                            <th style="text-align: center;">Cours assignés</th>
+                            <th style="text-align: center;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-tbody">
+                        <!-- Rempli dynamiquement -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de création d'utilisateur -->
+    <div id="create-user-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content" style="max-width: 720px; max-height: 92vh; display: flex; flex-direction: column;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 20px;">
+                <h3 style="margin: 0; color: #0f172a; font-size: 18px;">Créer un nouvel utilisateur</h3>
+                <button onclick="closeCreateUserModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #64748b;">&times;</button>
+            </div>
+            
+            <form id="create-user-form" onsubmit="event.preventDefault(); createUser();" style="overflow-y: auto; flex: 1; padding-right: 5px;">
+                <div class="user-form-grid">
+                    <div class="form-group">
+                        <label for="new-matricule">Matricule <span style="color: red;">*</span></label>
+                        <input type="text" id="new-matricule" placeholder="Ex: EMP0142 ou ADM002" required style="text-transform: uppercase;">
+                    </div>
+                    <div class="form-group">
+                        <label for="new-password">Mot de passe <span style="color: red;">*</span></label>
+                        <input type="password" id="new-password" placeholder="Mot de passe de connexion" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-nom">Nom <span style="color: red;">*</span></label>
+                        <input type="text" id="new-nom" placeholder="Ex: KOUAME" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-prenom">Prénom <span style="color: red;">*</span></label>
+                        <input type="text" id="new-prenom" placeholder="Ex: Jean-Marc" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-email">Adresse Email</label>
+                        <input type="email" id="new-email" placeholder="Ex: jm.kouame@sgci.ci">
+                    </div>
+                    <div class="form-group">
+                        <label for="new-direction">Direction / Département</label>
+                        <input type="text" id="new-direction" placeholder="Ex: Data, Direction Financière, DSI, DRH...">
+                    </div>
+                    <div class="form-group">
+                        <label for="new-poste">Poste / Fonction</label>
+                        <input type="text" id="new-poste" placeholder="Ex: Data Scientist, Analyste Financier, Stagiaire...">
+                    </div>
+                    <div class="form-group">
+                        <label for="new-statut-contrat">Type de Contrat / Statut</label>
+                        <select id="new-statut-contrat">
+                            <option value="CDI" selected>CDI</option>
+                            <option value="CDD">CDD</option>
+                            <option value="Stagiaire">Stagiaire</option>
+                            <option value="Alternant">Alternant</option>
+                            <option value="Prestataire">Prestataire</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-date-embauche">Date d'arrivée / Embauche</label>
+                        <input type="date" id="new-date-embauche">
+                    </div>
+                    <div class="form-group">
+                        <label for="new-role">Rôle dans l'application <span style="color: red;">*</span></label>
+                        <select id="new-role" required>
+                            <option value="user">Utilisateur / Apprenant</option>
+                            <option value="admin">Administrateur</option>
+                            <option value="superadmin" id="role-option-superadmin" style="display: none;">Super Administrateur</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px; border-top: 1px solid #e2e8f0; padding-top: 15px; align-items: center;">
+                    <span id="user-msg" style="font-weight: 600; font-size: 14px; margin-right: auto;"></span>
+                    <button type="button" onclick="closeCreateUserModal()" class="nav-btn" style="padding: 10px 20px;">Annuler</button>
+                    <button type="submit" class="submit-btn" style="width: auto; padding: 10px 25px; margin: 0; background: #e9041e;">Enregistrer l'utilisateur</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal d'édition utilisateur -->
+    <div id="edit-user-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 20px;">
+                <h3 style="margin: 0; color: #0f172a;">Modifier l'utilisateur</h3>
+                <button onclick="closeEditUserModal()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #64748b;">&times;</button>
+            </div>
+            
+            <form id="edit-user-form" onsubmit="event.preventDefault(); saveUserEdit();">
+                <input type="hidden" id="edit-user-id">
+                
+                <div class="user-form-grid">
+                    <div class="form-group">
+                        <label for="edit-matricule">Matricule <span style="color: red;">*</span></label>
+                        <input type="text" id="edit-matricule" required style="text-transform: uppercase;">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-password">Nouveau mot de passe <small style="color:#64748b;">(Laisser vide si inchangé)</small></label>
+                        <input type="password" id="edit-password" placeholder="••••••••">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-nom">Nom <span style="color: red;">*</span></label>
+                        <input type="text" id="edit-nom" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-prenom">Prénom <span style="color: red;">*</span></label>
+                        <input type="text" id="edit-prenom" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-email">Adresse Email</label>
+                        <input type="email" id="edit-email">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-direction">Direction / Département</label>
+                        <input type="text" id="edit-direction">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-poste">Poste / Fonction</label>
+                        <input type="text" id="edit-poste">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-statut-contrat">Type de Contrat / Statut</label>
+                        <select id="edit-statut-contrat">
+                            <option value="CDI">CDI</option>
+                            <option value="CDD">CDD</option>
+                            <option value="Stagiaire">Stagiaire</option>
+                            <option value="Alternant">Alternant</option>
+                            <option value="Prestataire">Prestataire</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-date-embauche">Date d'arrivée / Embauche</label>
+                        <input type="date" id="edit-date-embauche">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-role">Rôle <span style="color: red;">*</span></label>
+                        <select id="edit-role" required>
+                            <option value="user">Utilisateur / Apprenant</option>
+                            <option value="admin">Administrateur</option>
+                            <option value="superadmin" id="edit-role-option-superadmin">Super Administrateur</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px; border-top: 1px solid #e2e8f0; padding-top: 15px;">
+                    <button type="button" onclick="closeEditUserModal()" class="nav-btn" style="padding: 10px 20px;">Annuler</button>
+                    <button type="submit" class="submit-btn" style="width: auto; padding: 10px 25px; margin: 0;">Enregistrer</button>
+                </div>
+                <p id="edit-user-msg" style="margin-top: 10px; text-align: right; font-weight: 600;"></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal d'import d'utilisateurs en masse -->
+    <div id="bulk-user-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content" style="max-width: 820px; max-height: 92vh; display: flex; flex-direction: column;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 20px;">
+                <h3 style="margin: 0; color: #0f172a; font-size: 18px; display: flex; align-items: center; gap: 8px;">
+                    Création d'utilisateurs en masse via fichier
+                </h3>
+                <button onclick="closeBulkUserModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #64748b;">&times;</button>
+            </div>
+
+            <div style="overflow-y: auto; flex: 1; padding-right: 5px;">
+                <!-- Instructions et téléchargement de modèles -->
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
+                    <h4 style="margin: 0 0 8px 0; color: #1e293b; font-size: 14px;">Colonnes attendues dans votre fichier (Excel ou CSV) :</h4>
+                    <p style="font-size: 12.5px; color: #475569; margin: 0 0 12px 0; line-height: 1.4;">
+                        Les champs avec une astérisque (<span style="color: red; font-weight: bold;">*</span>) sont obligatoires. Les autres champs sont optionnels :
+                    </p>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 8px; font-size: 12px; margin-bottom: 14px;">
+                        <div style="background: #ffffff; padding: 8px 10px; border-radius: 6px; border-left: 3px solid #ef4444; box-shadow: 0 1px 2px rgba(0,0,0,0.04);">
+                            <strong>Matricule *</strong> <span style="color: #64748b;">(Ex: EMP0142 ou ADM002)</span>
+                        </div>
+                        <div style="background: #ffffff; padding: 8px 10px; border-radius: 6px; border-left: 3px solid #ef4444; box-shadow: 0 1px 2px rgba(0,0,0,0.04);">
+                            <strong>Mot de passe *</strong> <span style="color: #64748b;">(Ex: pass123)</span>
+                        </div>
+                        <div style="background: #ffffff; padding: 8px 10px; border-radius: 6px; border-left: 3px solid #ef4444; box-shadow: 0 1px 2px rgba(0,0,0,0.04);">
+                            <strong>Nom *</strong> <span style="color: #64748b;">(Ex: KOUAME)</span>
+                        </div>
+                        <div style="background: #ffffff; padding: 8px 10px; border-radius: 6px; border-left: 3px solid #ef4444; box-shadow: 0 1px 2px rgba(0,0,0,0.04);">
+                            <strong>Prénom *</strong> <span style="color: #64748b;">(Ex: Jean-Marc)</span>
+                        </div>
+                        <div style="background: #ffffff; padding: 8px 10px; border-radius: 6px; border-left: 3px solid #e9041e; box-shadow: 0 1px 2px rgba(0,0,0,0.04);">
+                            <strong>Adresse Email</strong> <span style="color: #64748b;">(Ex: jm.kouame@sgci.ci)</span>
+                        </div>
+                        <div style="background: #ffffff; padding: 8px 10px; border-radius: 6px; border-left: 3px solid #e9041e; box-shadow: 0 1px 2px rgba(0,0,0,0.04);">
+                            <strong>Direction / Département</strong> <span style="color: #64748b;">(Ex: Finance, DSI...)</span>
+                        </div>
+                        <div style="background: #ffffff; padding: 8px 10px; border-radius: 6px; border-left: 3px solid #e9041e; box-shadow: 0 1px 2px rgba(0,0,0,0.04);">
+                            <strong>Poste / Fonction</strong> <span style="color: #64748b;">(Ex: Data Scientist...)</span>
+                        </div>
+                        <div style="background: #ffffff; padding: 8px 10px; border-radius: 6px; border-left: 3px solid #e9041e; box-shadow: 0 1px 2px rgba(0,0,0,0.04);">
+                            <strong>Type de Contrat / Statut</strong> <span style="color: #64748b;">(CDI, CDD, Stagiaire...)</span>
+                        </div>
+                        <div style="background: #ffffff; padding: 8px 10px; border-radius: 6px; border-left: 3px solid #e9041e; box-shadow: 0 1px 2px rgba(0,0,0,0.04);">
+                            <strong>Date d'arrivée / Embauche</strong> <span style="color: #64748b;">(jj/mm/aaaa)</span>
+                        </div>
+                        <div style="background: #ffffff; padding: 8px 10px; border-radius: 6px; border-left: 3px solid #e9041e; box-shadow: 0 1px 2px rgba(0,0,0,0.04);">
+                            <strong>Rôle dans l'application</strong> <span style="color: #64748b;">(Apprenant, Admin...)</span>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <a href="/api/users/template?format=xlsx" download class="action-btn-sm" style="background: #000000; color: white; padding: 8px 14px; border-radius: 6px; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; font-size: 12px;">
+                            Télécharger le modèle Excel (.xlsx)
+                        </a>
+                        <a href="/api/users/template?format=csv" download class="action-btn-sm" style="background: #e9041e; color: white; padding: 8px 14px; border-radius: 6px; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; font-size: 12px;">
+                            Télécharger le modèle CSV (.csv)
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Zone d'upload de fichier -->
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label style="font-weight: 600; margin-bottom: 8px; display: block; color: #1e293b;">
+                        Sélectionner le fichier d'utilisateurs (.xlsx, .xls, .csv) <span style="color: red;">*</span>
+                    </label>
+                    <div id="bulk-drop-zone" style="border: 2px dashed #cbd5e1; border-radius: 8px; padding: 24px; text-align: center; background: #fafafa; cursor: pointer; transition: all 0.2s;" onclick="document.getElementById('bulk-user-file-input').click()">
+                        
+                        <p style="margin: 0 0 5px 0; font-weight: 600; color: #334155;">Cliquez pour parcourir ou glissez-déposez votre fichier ici</p>
+                        <p style="margin: 0; font-size: 12px; color: #64748b;">Formats acceptés : Excel (.xlsx, .xls) ou CSV (.csv avec séparateur point-virgule ou virgule)</p>
+                        <input type="file" id="bulk-user-file-input" accept=".xlsx, .xls, .csv" style="display: none;" onchange="handleBulkFileSelected(this)">
+                    </div>
+                    <div id="bulk-file-info" style="display: none; margin-top: 10px; padding: 10px 14px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 13px; color: #000000;">
+                        <strong id="bulk-file-name">fichier.csv</strong> (<span id="bulk-file-size">0 KB</span>)
+                    </div>
+                </div>
+
+                <!-- Rapport des résultats d'importation (affiché après exécution) -->
+                <div id="bulk-import-results" style="display: none; margin-top: 20px;">
+                    <h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px;">Compte-rendu de l'importation :</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 16px;">
+                        <div style="background: #f1f5f9; padding: 12px; border-radius: 6px; text-align: center;">
+                            <div style="font-size: 20px; font-weight: 700; color: #334155;" id="stat-total">0</div>
+                            <div style="font-size: 12px; color: #64748b;">Lignes traitées</div>
+                        </div>
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 6px; text-align: center;">
+                            <div style="font-size: 20px; font-weight: 700; color: #000000;" id="stat-success">0</div>
+                            <div style="font-size: 12px; color: #000000; font-weight: 600;">Créés avec succès</div>
+                        </div>
+                        <div style="background: #fef2f2; padding: 12px; border-radius: 6px; text-align: center;">
+                            <div style="font-size: 20px; font-weight: 700; color: #dc2626;" id="stat-errors">0</div>
+                            <div style="font-size: 12px; color: #b91c1c;">Erreurs / Rejets</div>
+                        </div>
+                    </div>
+
+                    <!-- Liste des erreurs détaillées si présentes -->
+                    <div id="bulk-errors-box" style="display: none; margin-bottom: 15px; border: 1px solid #fecaca; border-radius: 6px; overflow: hidden;">
+                        <div style="background: #fee2e2; padding: 10px 14px; font-weight: 700; color: #991b1b; font-size: 13px;">
+                            Détail des erreurs rencontrées (<span id="bulk-errors-count">0</span>)
+                        </div>
+                        <div style="max-height: 180px; overflow-y: auto; background: #fff5f5; font-size: 12px;">
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="border-bottom: 1px solid #fecaca; text-align: left;">
+                                        <th style="padding: 6px 10px; width: 60px;">Ligne</th>
+                                        <th style="padding: 6px 10px; width: 120px;">Matricule</th>
+                                        <th style="padding: 6px 10px;">Motif de l'erreur</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="bulk-errors-tbody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Liste des utilisateurs créés -->
+                    <div id="bulk-success-box" style="display: none; margin-bottom: 15px; border: 1px solid #cbd5e1; border-radius: 6px; overflow: hidden;">
+                        <div style="background: #f1f5f9; padding: 10px 14px; font-weight: 700; color: #000000; font-size: 13px;">
+                            Utilisateurs créés avec succès (<span id="bulk-success-count">0</span>)
+                        </div>
+                        <div style="max-height: 180px; overflow-y: auto; background: #ffffff; font-size: 12px;">
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="border-bottom: 1px solid #e2e8f0; text-align: left;">
+                                        <th style="padding: 6px 10px;">Matricule</th>
+                                        <th style="padding: 6px 10px;">Nom & Prénom</th>
+                                        <th style="padding: 6px 10px;">Direction / Poste</th>
+                                        <th style="padding: 6px 10px;">Rôle</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="bulk-success-tbody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer modal -->
+            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; border-top: 1px solid #e2e8f0; padding-top: 15px; align-items: center;">
+                <span id="bulk-modal-msg" style="font-weight: 600; font-size: 13px; margin-right: auto;"></span>
+                <button type="button" onclick="closeBulkUserModal()" class="nav-btn" style="padding: 10px 20px;">Fermer</button>
+                <button type="button" id="bulk-submit-btn" onclick="uploadBulkUsers()" class="submit-btn" style="width: auto; padding: 10px 25px; margin: 0; background: #000000; display: inline-flex; align-items: center; gap: 8px;">
+                    Lancer l'importation
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- NOUVELLE PAGE DÉDIÉE : GESTION DES ASSIGNATIONS & PARCOURS DYNAMIQUES -->
+    <!-- ========================================================================= -->

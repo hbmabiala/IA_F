@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Tableau de Bord - MALAM'IA SGCI{% endblock %}
+{% block content %}
+<div id="page-dashboard" class="page active">
+    {% if user_role == 'user' %}
+    {% include "pages/user_dashboard.html" %}
+    {% else %}
+    {% include "pages/admin_dashboard.html" %}
+    {% endif %}
+</div>
+{% endblock %}

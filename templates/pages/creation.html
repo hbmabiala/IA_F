@@ -1,0 +1,111 @@
+    <div id="page-creation" class="page active scrollable-page">
+        <div style="width: 80%; max-width: 600px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+            <button type="button" onclick="navigateTo('consultation')" class="back-btn" style="margin-bottom: 0; padding: 7px 14px; background: #f8fafc; border-radius: 8px; font-weight: 700; color: #1e293b; border: 1px solid #cbd5e1; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px;">
+                ← Retour au catalogue
+            </button>
+            <h2 id="creation-form-heading" style="margin: 0; font-size: 18px; color: #0f172a; font-weight: 800;">Création de Formation</h2>
+        </div>
+        <form id="course-form" class="modern-form">
+            <input type="hidden" id="course-id">
+            
+            <p style="font-size: 12.5px; color: #64748b; margin: 0 0 10px 0;">
+                <span style="color: #ef4444; font-weight: bold; font-size: 14px;">*</span> Champs obligatoires
+            </p>
+            
+            <div class="form-group">
+                <label for="course-file">Document source (PDF, Vidéo, Audio, PPTX, Image) <span style="color: #ef4444; font-weight: bold;">*</span></label>
+                <input type="file" id="course-file" required accept="*/*" style="padding: 10px; background: #f9f9f9; border: 2px dashed #ccc; width: 100%;">
+                <small style="color: #666; margin-top: 5px; display: block;">Gemini va analyser ce fichier pour créer la présentation et le cours.</small>
+            </div>
+            
+            <!-- Miniature / Vignette de la formation -->
+            <div class="form-group">
+                <label for="course-thumbnail" style="font-weight: 700; color: #0f172a;"> Image miniature de la formation (Optionnel)</label>
+                <input type="file" id="course-thumbnail" accept="image/*" onchange="previewCourseThumbnail(event)" style="padding: 10px; background: #f9f9f9; border: 2px dashed #cbd5e1; width: 100%; border-radius: 6px; box-sizing: border-box;">
+                <input type="hidden" id="course-existing-thumbnail">
+                <small style="color: #64748b; font-size: 11px; margin-top: 4px; display: block;">Format recommandé : JPG, PNG ou WEBP (format 16:9). Si non renseignée, une bannière par défaut sera affichée.</small>
+                
+                <div id="course-thumbnail-preview-box" style="display: none; margin-top: 12px; position: relative; max-width: 320px; border-radius: 8px; overflow: hidden; border: 2px solid #cbd5e1; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+                    <img id="course-thumbnail-preview-img" src="" alt="Aperçu miniature" style="width: 100%; height: 160px; object-fit: cover; display: block;">
+                    <button type="button" onclick="removeCourseThumbnail()" style="position: absolute; top: 8px; right: 8px; background: rgba(15,23,42,0.85); color: white; border: none; border-radius: 6px; padding: 5px 10px; font-size: 12px; cursor: pointer; font-weight: 600;">Retirer</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="course-title">Titre de la formation <span style="color: #ef4444; font-weight: bold;">*</span></label>
+                <input type="text" id="course-title" required placeholder="Ex: Introduction au Management">
+            </div>
+            <div class="form-group">
+                <label for="course-desc"> Description & Consignes pour l'IA <span style="color: #ef4444; font-weight: bold;">*</span></label>
+                <textarea id="course-desc" rows="5" required placeholder="Exemple : &#10; Objectif : Former les managers de la Direction Générale aux techniques de leadership.&#10;Cible : Directeurs et chefs de service.&#10;Ton : Professionnel mais accessible, avec des exemples concrets.&#10;Langue : Français.&#10;Points clés à couvrir : Gestion d'équipe, communication, prise de décision."></textarea>
+                <small style="color: #888; display: block; margin-top: 4px;">
+                    <strong>Plus cette description est précise, meilleure sera la formation générée.</strong> Indiquez : l'objectif, la cible (direction, poste...), le ton souhaité et la langue.
+                </small>
+            </div>
+            <div class="form-group">
+                <label for="course-domain">Domaine</label>
+                <input type="text" id="course-domain" placeholder="Ex: Informatique, Ressources Humaines...">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="course-duration">Durée de la formation (en heures)</label>
+                    <input type="number" id="course-duration" placeholder="Ex: 14">
+                </div>
+                <div class="form-group">
+                    <label for="course-level">Niveau</label>
+                    <select id="course-level">
+                        <option value="Débutant">Débutant</option>
+                        <option value="Intermédiaire">Intermédiaire</option>
+                        <option value="Avancé">Avancé</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Voix et Identité du Formateur IA -->
+            <div class="form-group" style="background: #f8fafc; padding: 14px 16px; border-radius: 10px; border: 1px solid #cbd5e1; margin: 15px 0;">
+                <label for="course-tutor-voice" style="font-weight: 700; color: #000000; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+                    <i class="fa-solid fa-microphone-lines"></i> Voix du Tuteur IA (Présentation & Live)
+                </label>
+                <select id="course-tutor-voice" style="width: 100%; padding: 10px 14px; border-radius: 6px; border: 1px solid #7dd3fc; font-weight: 600; font-size: 13.5px; background: white; color: #0f172a;">
+                    <option value="auto">✨ Automatique (Alternance intelligente des voix)</option>
+                    <option value="thomas">👨 Thomas (Homme dynamique &amp; pédagogique)</option>
+                    <option value="sophie">👩 Sophie (Femme posée &amp; claire)</option>
+                    <option value="marc">👨 Marc (Homme professionnel &amp; expert)</option>
+                    <option value="camille">👩 Camille (Femme chaleureuse &amp; bienveillante)</option>
+                </select>
+                <small style="color: #64748b; font-size: 11.5px; margin-top: 5px; display: block;">
+                    🔒 <strong>Garantie de continuité :</strong> cette voix sera conservée du début à la fin de la formation (slides, questions orales et mode interactif).
+                </small>
+            </div>
+
+            <!-- Visibilité et Ciblage de la formation -->
+            <div class="form-group" style="background: #f8fafc; padding: 18px; border-radius: 10px; border: 1px solid #e2e8f0; margin: 15px 0;">
+                <label for="course-visibility" style="font-weight: 700; color: #0f172a; margin-bottom: 8px; display: block;">
+                     Visibilité et Accès à la formation
+                </label>
+                <select id="course-visibility" onchange="toggleCourseVisibilityFields()" style="width: 100%; padding: 10px 14px; border-radius: 6px; border: 1px solid #cbd5e1; font-weight: 500; font-size: 14px; background: white;">
+                    <option value="assigned" selected>Privé / Sur assignation uniquement (Par défaut)</option>
+                    <option value="targeted"> Ciblé par Direction(s) et/ou Poste(s)</option>
+                    <option value="public">Public (Accessible à tous les collaborateurs)</option>
+                </select>
+                
+                <div id="course-targeted-box" style="display: none; margin-top: 15px; padding-top: 15px; border-top: 1px solid #e2e8f0;">
+                    <div class="form-row" style="margin-bottom: 0;">
+                        <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                            <label for="course-target-directions" style="font-size: 13px; font-weight: 600; color: #334155;">Direction(s) ciblée(s)</label>
+                            <input type="text" id="course-target-directions" placeholder="Ex: Direction des Risques, DSI, DRH (séparées par des virgules)" style="font-size: 13px;">
+                            <small style="color: #64748b; font-size: 11px; margin-top: 4px; display: block;">Les collaborateurs de ces directions auront accès au cours.</small>
+                        </div>
+                        <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                            <label for="course-target-postes" style="font-size: 13px; font-weight: 600; color: #334155;">Poste(s) ciblé(s)</label>
+                            <input type="text" id="course-target-postes" placeholder="Ex: Analyste, Auditeur, Chef de Projet (séparés par des virgules)" style="font-size: 13px;">
+                            <small style="color: #64748b; font-size: 11px; margin-top: 4px; display: block;">Les collaborateurs ayant ces postes auront accès au cours.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" id="submit-btn" class="submit-btn">Enregistrer la formation</button>
+        </form>
+    </div>
+
+    <!-- Page Détails de la Formation (MALAM'IA & Discussion Interactive) -->

@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full bg-[#f8f9fa]">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connexion • Plateforme T-MALAM'IA | Société Générale Côte d'Ivoire</title>
+  <link rel="icon" href="/static/img/logo_sgci.png" type="image/png">
+  
+  <!-- Polices d'Édition Internationale : Playfair Display & Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"Playfair Display"', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            sgci: {
+              red: '#e60028',
+              redHover: '#cc0024',
+              dark: '#090a0f',
+              black: '#12141d',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Ambiance Lumineuse Architecturale */
+    body {
+      background-color: #f8f9fa;
+      background-image: 
+        radial-gradient(at 15% 15%, rgba(245, 238, 226, 0.75) 0px, transparent 55%),
+        radial-gradient(at 85% 85%, rgba(226, 232, 240, 0.65) 0px, transparent 55%),
+        radial-gradient(at 50% 40%, rgba(255, 255, 255, 0.9) 0px, transparent 70%);
+      color: #12141d;
+    }
+
+    /* Carte Lumineuse Haute Précision */
+    .daylight-card {
+      background: #ffffff;
+      border: 1px solid rgba(18, 20, 29, 0.08);
+      box-shadow: 
+        0 25px 60px -15px rgba(18, 20, 29, 0.08),
+        0 0 0 1px rgba(18, 20, 29, 0.04),
+        0 2px 4px 0 rgba(0, 0, 0, 0.02);
+    }
+
+    /* Champs de saisie */
+    .daylight-input {
+      background: #fafbfc;
+      border: 1px solid #e2e5eb;
+      color: #090a0f;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .daylight-input:focus {
+      background: #ffffff;
+      border-color: #090a0f;
+      box-shadow: 0 0 0 3px rgba(9, 10, 15, 0.06);
+    }
+
+    /* Bouton d'action Rouge SGCI */
+    .btn-sgci {
+      background-color: #e60028;
+      color: #ffffff;
+      box-shadow: 0 8px 24px -4px rgba(230, 0, 40, 0.35);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-sgci:hover {
+      background-color: #cc0024;
+      box-shadow: 0 12px 28px -4px rgba(230, 0, 40, 0.45);
+      transform: translateY(-1px);
+    }
+    .btn-sgci:active {
+      transform: translateY(0.5px);
+    }
+
+    /* Animation d'erreur */
+    @keyframes subtleShake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-5px); }
+      40%, 80% { transform: translateX(5px); }
+    }
+    .shake-error {
+      animation: subtleShake 0.4s ease-in-out;
+    }
+
+    /* Canvas d'ambiance lumineuse */
+    #ambientCanvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.85;
+    }
+  </style>
+</head>
+
+<body class="min-h-full font-sans antialiased flex flex-col justify-between selection:bg-red-600 selection:text-white relative overflow-x-hidden">
+
+  <script>
+    // Sur la page de connexion, purge des éventuels reliquats de session expirée
+    try {
+      if (document.cookie.indexOf('ia_user_role') === -1) {
+        sessionStorage.removeItem('ia_formation_user');
+        localStorage.removeItem('ia_formation_user');
+      }
+    } catch(e) {}
+  </script>
+
+  <!-- Halo de lumière naturelle interactif -->
+  <canvas id="ambientCanvas"></canvas>
+
+  <!-- ================= Barre de Tête Institutionnelle ================= -->
+  <header class="w-full max-w-7xl mx-auto px-6 sm:px-10 py-6 flex items-center justify-between relative z-10">
+    <!-- Logo Officiel Société Générale Côte d'Ivoire & Intitulé -->
+    <div class="flex items-center gap-4 sm:gap-6">
+      <img src="/static/img/logo_sgci.png" alt="Société Générale Côte d'Ivoire" class="h-30 sm:h-40 w-auto object-contain">
+      <div class="h-7 w-[1px] bg-stone-300 hidden sm:block"></div>
+      <div>
+        <span class="font-display text-base sm:text-lg font-bold text-stone-950 tracking-tight">Plateforme de Formation</span>
+        <p class="text-[11px] sm:text-xs text-stone-500 font-medium">Direction des Ressources Humaines • T-MALAM'IA SGCI</p>
+      </div>
+    </div>
+
+    <!-- Badge de Sécurité -->
+    <div class="flex items-center gap-2 text-xs text-stone-600 bg-white px-3.5 py-1.5 rounded-full border border-stone-200/80 shadow-2xs">
+      <i data-lucide="lock" class="w-3.5 h-3.5 text-stone-700"></i>
+      <span class="font-medium">Connexion sécurisée</span>
+    </div>
+  </header>
+
+  <!-- ================= Zone Centrale : Composition Split-View ================= -->
+  <main class="w-full max-w-7xl mx-auto px-6 sm:px-10 my-auto py-6 sm:py-10 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+    
+    <!-- VOLET GAUCHE : Vision Métier -->
+    <div class="lg:col-span-7 space-y-7 pr-0 lg:pr-6">
+      
+      <!-- Pastille de Statut -->
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-stone-200/80 shadow-2xs text-xs font-semibold text-stone-800">
+        <span class="w-2 h-2 rounded-full bg-red-600"></span>
+        <span>Portail Collaborateurs SGCI</span>
+      </div>
+
+      <!-- Grand Titre Typographique -->
+      <div class="space-y-4">
+        <h1 class="font-display text-4xl sm:text-5xl lg:text-[52px] font-bold text-stone-950 leading-[1.12] tracking-tight">
+          Votre formation interactive, <span class="italic font-normal font-display">axée sur vos exigences métiers</span>.
+        </h1>
+        <p class="text-stone-600 text-base sm:text-lg font-light leading-relaxed max-w-xl">
+          Une pédagogie immersive où chaque collaborateur progresse en toute autonomie avec l'avatar T-MALAM'IA, guidé et évalué en temps réel sur vos cas métiers.
+        </p>
+      </div>
+
+      <!-- 2 Piliers Pédagogiques -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+        
+        <!-- Bloc 1 -->
+        <div class="p-5 rounded-2xl bg-white border border-stone-200/80 shadow-sm space-y-2">
+          <div class="w-8 h-8 rounded-lg bg-stone-100 flex items-center justify-center text-stone-800">
+            <i data-lucide="book-open" class="w-4 h-4"></i>
+          </div>
+          <h2 class="text-sm font-bold text-stone-900">Parcours Métiers Autonomes</h2>
+          <p class="text-xs text-stone-500 leading-relaxed font-light">
+            Parcours interactifs, tuteur vocal intelligent et rétroactions immédiates accessibles à tout instant.
+          </p>
+        </div>
+
+        <!-- Bloc 2 -->
+        <div class="p-5 rounded-2xl bg-white border border-stone-200/80 shadow-sm space-y-2">
+          <div class="w-8 h-8 rounded-lg bg-stone-100 flex items-center justify-center text-stone-800">
+            <i data-lucide="shield-check" class="w-4 h-4"></i>
+          </div>
+          <h2 class="text-sm font-bold text-stone-900">Environnement Cloisonné SGCI</h2>
+          <p class="text-xs text-stone-500 leading-relaxed font-light">
+            Vos échanges, synthèses et évaluations demeurent strictement confidentiels et conformes RGPD.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Note de Réassurance -->
+      <div class="flex items-center gap-2.5 text-xs text-stone-500 font-medium pt-1">
+        <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+        <span>Apprentissage individualisé continu : un enseignement sur mesure avec assistance technique dédiée.</span>
+      </div>
+
+    </div>
+
+    <!-- VOLET DROIT : Boîtier d'Authentification -->
+    <div class="lg:col-span-5 w-full max-w-md mx-auto lg:mx-0">
+      
+      <div id="authCard" class="daylight-card rounded-3xl p-8 sm:p-10 relative overflow-hidden">
+        
+        <!-- En-tête du formulaire -->
+        <div class="mb-7">
+          <h2 class="font-display text-3xl font-bold text-stone-950 tracking-tight">
+            Connexion
+          </h2>
+          <p class="text-xs text-stone-500 mt-2 font-normal leading-relaxed">
+            Saisissez vos identifiants pour accéder à votre espace de formation.
+          </p>
+        </div>
+
+        <!-- Formulaire de Connexion -->
+        <form id="login-form" class="space-y-4" onsubmit="event.preventDefault(); handleLogin();">
+          
+          <!-- Champ 1 : Identifiant ou Matricule -->
+          <div>
+            <label for="login-user" class="block text-xs font-semibold text-stone-800 mb-1.5">
+              Matricule ou Adresse Email Professionnelle
+            </label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-stone-400">
+                <i data-lucide="mail" class="w-4 h-4"></i>
+              </div>
+              <input 
+                type="text" 
+                id="login-user" 
+                name="identifier"
+                required 
+                autofocus
+                autocomplete="username"
+                placeholder="ADMIN001 ou prenom.nom@sgci.ci" 
+                class="daylight-input w-full pl-10 pr-4 py-3 rounded-xl text-xs placeholder-stone-400 focus:outline-none font-normal"
+              >
+            </div>
+          </div>
+
+          <!-- Champ 2 : Mot de passe -->
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label for="login-pass" class="text-xs font-semibold text-stone-800">
+                Mot de passe
+              </label>
+              <button 
+                type="button" 
+                onclick="openResetModal()" 
+                class="text-xs font-medium text-stone-500 hover:text-stone-950 hover:underline transition"
+              >
+                Mot de passe oublié ?
+              </button>
+            </div>
+
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-stone-400">
+                <i data-lucide="lock" class="w-4 h-4"></i>
+              </div>
+              <input 
+                type="password" 
+                id="login-pass" 
+                name="password"
+                required 
+                autocomplete="current-password"
+                placeholder="••••••••" 
+                onkeyup="checkCapsLock(event)"
+                class="daylight-input w-full pl-10 pr-11 py-3 rounded-xl text-xs placeholder-stone-400 focus:outline-none font-normal"
+              >
+              <button 
+                type="button" 
+                id="togglePassword" 
+                onclick="togglePasswordVisibility()" 
+                class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-stone-400 hover:text-stone-700 transition focus:outline-none"
+                aria-label="Afficher ou masquer le mot de passe"
+              >
+                <i data-lucide="eye" id="eyeIcon" class="w-4 h-4"></i>
+              </button>
+            </div>
+
+            <!-- Alerte Caps Lock -->
+            <div id="capsLockWarning" class="hidden mt-2 p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-[11px] flex items-center gap-2">
+              <i data-lucide="alert-circle" class="w-3.5 h-3.5 text-amber-600 shrink-0"></i>
+              <span>Touche <strong>Verr. Maj (Caps Lock)</strong> activée sur votre clavier.</span>
+            </div>
+          </div>
+
+          <!-- Encart d'Erreur -->
+          <div id="login-error" class="hidden p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-900 text-xs flex items-start gap-2.5">
+            <i data-lucide="alert-circle" class="w-4 h-4 text-red-600 shrink-0 mt-0.5"></i>
+            <div class="leading-relaxed">
+              <span id="login-error-title" class="font-semibold block text-red-950">Identifiant ou mot de passe incorrect</span>
+              <span id="login-error-sub" class="text-[11px] text-red-700">Vérifiez vos identifiants ou contactez la cellule formation.</span>
+            </div>
+          </div>
+
+          <!-- Bouton Se connecter -->
+          <button 
+            type="submit" 
+            id="login-submit-btn" 
+            class="btn-sgci w-full mt-3 py-3.5 px-6 rounded-xl font-semibold text-xs tracking-wider uppercase flex items-center justify-center gap-2.5 cursor-pointer"
+          >
+            <span id="login-btn-text">Se connecter</span>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5" id="login-btn-icon"></i>
+          </button>
+
+        </form>
+
+        <!-- Signature Légale Discrète -->
+        <div class="mt-7 pt-5 border-t border-stone-100 text-center">
+          <p class="text-[11px] text-stone-400 font-normal">
+            Direction des Ressources Humaines • SGCI Academy © 2026
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Écran de Validation (Succès) -->
+      <div id="revealSuccess" class="hidden daylight-card rounded-3xl p-8 sm:p-10 text-center border-stone-200">
+        <div class="w-14 h-14 mx-auto rounded-full bg-stone-900 text-white flex items-center justify-center mb-5 shadow-lg">
+          <i data-lucide="check" class="w-7 h-7 text-emerald-400"></i>
+        </div>
+        <p class="text-[10px] uppercase tracking-widest text-stone-500 font-bold mb-1 font-mono">Connexion confirmée</p>
+        <h3 class="font-display text-2xl font-bold text-stone-900 mb-2">Bienvenue dans votre Espace</h3>
+        <p class="text-xs text-stone-500 mb-6">Accès sécurisé à la plateforme de formation T-MALAM'IA...</p>
+        <div class="w-full bg-stone-100 rounded-full h-1.5 overflow-hidden mb-6">
+          <div id="successProgress" class="bg-red-600 h-full w-0 transition-all duration-700"></div>
+        </div>
+        <a id="directAccessLink" href="/dashboard" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-stone-900 text-white text-xs font-semibold hover:bg-stone-800 transition">
+          <span>Accéder à mon espace</span>
+          <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+        </a>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ================= Pied de Page Discret ================= -->
+  <footer class="w-full max-w-7xl mx-auto px-6 sm:px-10 py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-stone-500 border-t border-stone-200/60 relative z-10">
+    <p>© 2026 Société Générale Côte d'Ivoire — Tous droits réservés</p>
+    <div class="flex items-center gap-4 text-[11px] font-medium text-stone-600">
+      <span>Protection des Données & RGPD</span>
+      <span>•</span>
+      <button type="button" onclick="openResetModal()" class="hover:underline cursor-pointer">Support & Assistance</button>
+    </div>
+  </footer>
+
+  <!-- ================= Modal d'Assistance ================= -->
+  <div id="resetModal" class="fixed inset-0 z-50 hidden bg-stone-900/40 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white border border-stone-200 rounded-3xl max-w-md w-full p-8 shadow-2xl relative">
+      <div class="flex items-center justify-between pb-3 border-b border-stone-100 mb-4">
+        <div>
+          <h3 class="font-display text-lg font-bold text-stone-900">Support & Assistance</h3>
+          <p class="text-[11px] text-stone-500">Direction des Ressources Humaines</p>
+        </div>
+        <button type="button" onclick="closeResetModal()" class="text-stone-400 hover:text-stone-700 p-1 cursor-pointer">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3.5 text-xs text-stone-600 leading-relaxed">
+        <p>
+          Pour des motifs de sécurité bancaire et de conformité, la réinitialisation des mots de passe est opérée par la cellule formation SGCI.
+        </p>
+        <div class="p-4 bg-stone-50 rounded-2xl border border-stone-200 space-y-1 font-mono text-[11px] text-stone-800">
+          <div class="font-sans font-semibold text-stone-900">Cellule Formation SGCI</div>
+          <div>Email : assistance.formation@sgci.ci</div>
+          <div>Matricules de test : ADMIN001 ou 5230</div>
+        </div>
+      </div>
+
+      <div class="mt-6 flex justify-end">
+        <button type="button" onclick="closeResetModal()" class="px-5 py-2.5 bg-stone-900 text-white text-xs font-semibold rounded-xl hover:bg-stone-800 transition cursor-pointer">
+          Fermer
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= Script Ambiance & Authentification ================= -->
+  <script>
+    if (window.lucide) {
+      lucide.createIcons();
+    }
+
+    // Détecteur Caps Lock
+    function checkCapsLock(e) {
+      const warning = document.getElementById('capsLockWarning');
+      if (e.getModifierState && e.getModifierState('CapsLock')) {
+        warning.classList.remove('hidden');
+      } else {
+        warning.classList.add('hidden');
+      }
+    }
+
+    // Afficher / Masquer Mot de passe
+    function togglePasswordVisibility() {
+      const passwordInput = document.getElementById('login-pass');
+      const eyeIcon = document.getElementById('eyeIcon');
+      
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        eyeIcon.setAttribute('data-lucide', 'eye-off');
+      } else {
+        passwordInput.type = 'password';
+        eyeIcon.setAttribute('data-lucide', 'eye');
+      }
+      if (window.lucide) lucide.createIcons();
+    }
+
+    // Modale d'assistance
+    function openResetModal() {
+      document.getElementById('resetModal').classList.remove('hidden');
+    }
+    function closeResetModal() {
+      document.getElementById('resetModal').classList.add('hidden');
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeResetModal();
+      }
+    });
+
+    const resetModal = document.getElementById('resetModal');
+    if (resetModal) {
+      resetModal.addEventListener('click', (e) => {
+        if (e.target === resetModal) {
+          closeResetModal();
+        }
+      });
+    }
+
+    // Soumission du formulaire & Intégration Backend
+    async function handleLogin() {
+      const userInput = (document.getElementById('login-user')?.value || '').trim();
+      const passInput = (document.getElementById('login-pass')?.value || '').trim();
+      const errorBox = document.getElementById('login-error');
+      const errorSub = document.getElementById('login-error-sub');
+      const submitBtn = document.getElementById('login-submit-btn');
+      const btnText = document.getElementById('login-btn-text');
+      const authCard = document.getElementById('authCard');
+      const reveal = document.getElementById('revealSuccess');
+      const progress = document.getElementById('successProgress');
+
+      if (errorBox) errorBox.classList.add('hidden');
+      if (authCard) authCard.classList.remove('shake-error');
+
+      if (!userInput || !passInput) {
+        if (errorSub) errorSub.innerText = "Veuillez renseigner votre matricule et votre mot de passe.";
+        if (errorBox) errorBox.classList.remove('hidden');
+        if (authCard) authCard.classList.add('shake-error');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.classList.add('opacity-75', 'cursor-wait');
+      btnText.innerText = "Vérification en cours...";
+
+      try {
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            identifier: userInput,
+            matricule: userInput,
+            username: userInput,
+            password: passInput
+          })
+        });
+        const data = await response.json();
+
+        if (data.success && data.user) {
+          try {
+            sessionStorage.setItem('ia_formation_user', JSON.stringify(data.user));
+            localStorage.setItem('ia_formation_user', JSON.stringify(data.user));
+            document.cookie = "ia_user_role=" + data.user.role + "; path=/; max-age=86400; SameSite=Lax";
+            document.cookie = "ia_user_id=" + data.user.id + "; path=/; max-age=86400; SameSite=Lax";
+          } catch(e) {}
+
+          // Animation visuelle de succès
+          authCard.classList.add('hidden');
+          reveal.classList.remove('hidden');
+          if (window.lucide) lucide.createIcons();
+
+          setTimeout(() => {
+            if (progress) progress.style.width = '100%';
+            setTimeout(() => {
+              window.location.href = '/dashboard';
+            }, 750);
+          }, 150);
+
+        } else {
+          if (errorSub) errorSub.innerText = data.error || "Matricule ou mot de passe incorrect.";
+          if (errorBox) errorBox.classList.remove('hidden');
+          if (authCard) authCard.classList.add('shake-error');
+          submitBtn.disabled = false;
+          submitBtn.classList.remove('opacity-75', 'cursor-wait');
+          btnText.innerText = "Se connecter";
+        }
+      } catch(e) {
+        console.error("Login error:", e);
+        if (errorSub) errorSub.innerText = "Erreur de communication avec le serveur bancaire.";
+        if (errorBox) errorBox.classList.remove('hidden');
+        if (authCard) authCard.classList.add('shake-error');
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('opacity-75', 'cursor-wait');
+        btnText.innerText = "Se connecter";
+      }
+    }
+
+    // Halo lumineux interactif
+    const canvas = document.getElementById('ambientCanvas');
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      let width, height;
+      let mouse = { x: window.innerWidth * 0.5, y: window.innerHeight * 0.5 };
+
+      function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resize);
+      window.addEventListener('mousemove', (e) => {
+        mouse.x += (e.clientX - mouse.x) * 0.08;
+        mouse.y += (e.clientY - mouse.y) * 0.08;
+      });
+      resize();
+
+      function renderLight() {
+        ctx.clearRect(0, 0, width, height);
+        const gradient = ctx.createRadialGradient(mouse.x, mouse.y, 60, mouse.x, mouse.y, 500);
+        gradient.addColorStop(0, 'rgba(255, 252, 245, 0.45)');
+        gradient.addColorStop(0.6, 'rgba(245, 248, 255, 0.18)');
+        gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, width, height);
+        requestAnimationFrame(renderLight);
+      }
+      renderLight();
+    }
+  </script>
+</body>
+</html>

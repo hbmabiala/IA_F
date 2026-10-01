@@ -1,0 +1,251 @@
+    <div id="page-rag-eval" class="page active scrollable-page">
+        
+        <!-- En-tête de la page -->
+        <div class="header-bar" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 15px; margin-bottom: 22px;">
+            <div>
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+                    <h1 style="margin: 0; font-size: 24px; font-weight: 800; color: #0f172a; letter-spacing: -0.3px;">Audit & Évaluation du Pipeline RAG</h1>
+                    <span class="role-badge role-superadmin" style="font-size: 11px; padding: 3px 10px; background: #000000; color: #ffffff; border-radius: 12px; font-weight: 700;">Super Admin Exclusif</span>
+                </div>
+                <p style="color: #64748b; margin: 0; font-size: 13.5px; max-width: 850px;">
+                    Contrôle de conformité de la <strong>RAG Triad</strong> (Pertinence du Contexte, Fidélité / Non-hallucination, Pertinence de la Réponse) et benchmark de latence (ChromaDB + Google Gemini).
+                </p>
+            </div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button type="button" onclick="loadRagEvaluationData(true)" class="nav-btn" style="background: white; border: 1px solid #cbd5e1; padding: 9px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;" title="Actualiser le rapport">
+                    <span>🔄</span> Actualiser
+                </button>
+                <button type="button" onclick="exportRagReportJson()" class="submit-btn" style="width: auto; padding: 9px 18px; margin: 0; background: #0f172a; font-size: 13px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px;">
+                    <span>📥</span> Exporter Rapport JSON
+                </button>
+            </div>
+        </div>
+
+        <!-- Section 1 : Panneau de Contrôle & Paramétrage de l'Audit -->
+        <div class="rag-card">
+            <div class="rag-section-header">
+                <h3 class="rag-section-title">
+                    <span>⚙️</span> Configuration de l'Audit & Benchmark
+                </h3>
+                <span id="rag-eval-last-run-badge" style="font-size: 12px; color: #64748b; background: #f1f5f9; padding: 4px 12px; border-radius: 20px; font-weight: 600;">
+                    Dernière analyse : <span id="rag-last-timestamp">Chargement...</span>
+                </span>
+            </div>
+
+            <form id="rag-eval-form" onsubmit="event.preventDefault(); triggerRagEvaluation();" style="display: flex; flex-direction: column; gap: 16px;">
+                <div class="rag-config-grid">
+                    <!-- Sélecteur de formation cible -->
+                    <div class="form-group" style="margin: 0;">
+                        <label for="rag-select-course" style="font-weight: 700; font-size: 13px; margin-bottom: 6px; display: block; color: #334155;">
+                            Formation cible à évaluer <span style="color: #e9041e;">*</span>
+                        </label>
+                        <select id="rag-select-course" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13.5px; background: white;" required>
+                            <option value="">-- Sélectionner une formation indexée --</option>
+                        </select>
+                        <small id="rag-course-chunks-hint" style="color: #64748b; font-size: 11.5px; margin-top: 5px; display: block;">
+                            Comptabilisation des chunks dans la collection ChromaDB.
+                        </small>
+                    </div>
+
+                    <!-- Mode d'évaluation (Segmented Pill Buttons) -->
+                    <div class="form-group" style="margin: 0;">
+                        <label style="font-weight: 700; font-size: 13px; margin-bottom: 6px; display: block; color: #334155;">
+                            Mode d'évaluation <span style="color: #e9041e;">*</span>
+                        </label>
+                        <div class="rag-segmented-control" style="margin-top: 4px;">
+                            <button type="button" id="seg-btn-benchmark" class="rag-seg-btn active" onclick="setRagEvalMode('benchmark')">
+                                <span>📊</span> Suite Benchmark Complète
+                            </button>
+                            <button type="button" id="seg-btn-single" class="rag-seg-btn" onclick="setRagEvalMode('single')">
+                                <span>🎯</span> Requête Unitaire Directe
+                            </button>
+                        </div>
+                        <!-- Radios invisibles pour compatibilité absolue -->
+                        <div style="display: none;">
+                            <input type="radio" name="rag-eval-mode" value="benchmark" checked onchange="toggleRagModeFields()">
+                            <input type="radio" name="rag-eval-mode" value="single" onchange="toggleRagModeFields()">
+                        </div>
+                        <small style="color: #64748b; font-size: 11.5px; margin-top: 5px; display: block;">
+                            Batterie de validation automatisée ou requête directe en temps réel.
+                        </small>
+                    </div>
+
+                    <!-- Bouton Lancer l'action aligné -->
+                    <div class="rag-config-btn-wrap">
+                        <button type="submit" id="btn-run-rag-eval" class="submit-btn" style="width: 100%; padding: 11px 22px; margin: 0; background: #e9041e; font-size: 13.5px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap;">
+                            <span id="btn-run-rag-icon">⚡</span>
+                            <span id="btn-run-rag-label">Lancer le Benchmark Complet</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Champ requête directe (affiché uniquement en mode unitaire) -->
+                <div id="rag-custom-query-group" class="form-group" style="display: none; margin: 0; background: #f8fafc; padding: 14px 16px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                    <label for="rag-custom-query" style="font-weight: 700; font-size: 13px; margin-bottom: 6px; display: block; color: #0f172a;">
+                        Question apprenant à tester en direct :
+                    </label>
+                    <input type="text" id="rag-custom-query" placeholder="Ex: Quels sont les 5 niveaux de besoins selon la pyramide de Maslow ?" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; box-sizing: border-box; background: white;">
+                </div>
+            </form>
+
+            <!-- Bannière d'exécution en cours -->
+            <div id="rag-eval-running-state" style="display: none; margin-top: 16px; padding: 14px 18px; background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; align-items: center; gap: 14px;">
+                <div class="loader" style="width: 24px; height: 24px; border-width: 3px;"></div>
+                <div style="flex: 1;">
+                    <strong style="color: #92400e; font-size: 13.5px; display: block;">Évaluation RAG en cours d'exécution...</strong>
+                    <span style="color: #b45309; font-size: 12px;">Interrogation vectorielle ChromaDB, synthèse Gemini et analyse par le Juge IA. Veuillez patienter.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2 : Indicateurs Clés - Architecture RAG Triad -->
+        <div class="rag-kpi-container">
+            <!-- Hero Card : Score RAG Global -->
+            <div class="rag-kpi-hero">
+                <div>
+                    <div class="rag-kpi-card-label">
+                        <span>Score RAG Global</span>
+                        <span style="font-size: 10px; background: #000000; color: white; padding: 2px 6px; border-radius: 4px; font-weight: 700;">Synthèse</span>
+                    </div>
+                    <div id="rag-kpi-global" style="font-size: 44px; font-weight: 900; color: #0f172a; line-height: 1.1; margin: 6px 0;">
+                        --
+                    </div>
+                    <div class="rag-progress-bar-bg">
+                        <div id="rag-kpi-global-bar" class="rag-progress-bar-fill" style="width: 0%;"></div>
+                    </div>
+                    <div id="rag-kpi-global-status" style="font-size: 12.5px; font-weight: 700; color: #16a34a; margin-top: 4px;">
+                        En attente d'évaluation
+                    </div>
+                </div>
+                <div id="rag-hero-course-title" style="font-size: 11.5px; color: #64748b; margin-top: 16px; padding-top: 10px; border-top: 1px solid #f1f5f9; font-weight: 600;">
+                    --
+                </div>
+            </div>
+
+            <!-- Sous-grille : Les 4 Piliers Détaillés -->
+            <div class="rag-kpi-subgrid">
+                <!-- 1. Pertinence Contexte -->
+                <div class="rag-kpi-card">
+                    <div>
+                        <div class="rag-kpi-card-label">
+                            <span>1. Pertinence Contexte</span>
+                            <span style="font-size: 14px;">🎯</span>
+                        </div>
+                        <div id="rag-kpi-context" class="rag-kpi-card-value" style="color: #0284c7;">
+                            --
+                        </div>
+                    </div>
+                    <div class="rag-kpi-card-desc">
+                        Signal-to-noise ratio dans les chunks ChromaDB.
+                    </div>
+                </div>
+
+                <!-- 2. Fidélité / Non-hallucination -->
+                <div class="rag-kpi-card">
+                    <div>
+                        <div class="rag-kpi-card-label">
+                            <span>2. Fidélité (Groundedness)</span>
+                            <span style="font-size: 14px;">🛡️</span>
+                        </div>
+                        <div id="rag-kpi-grounded" class="rag-kpi-card-value" style="color: #16a34a;">
+                            --
+                        </div>
+                    </div>
+                    <div class="rag-kpi-card-desc">
+                        Ancrage strict des faits sans extrapolation.
+                    </div>
+                </div>
+
+                <!-- 3. Pertinence Réponse -->
+                <div class="rag-kpi-card">
+                    <div>
+                        <div class="rag-kpi-card-label">
+                            <span>3. Pertinence Réponse</span>
+                            <span style="font-size: 14px;">💬</span>
+                        </div>
+                        <div id="rag-kpi-answer" class="rag-kpi-card-value" style="color: #9333ea;">
+                            --
+                        </div>
+                    </div>
+                    <div class="rag-kpi-card-desc">
+                        Réponse directe, concise et professionnelle.
+                    </div>
+                </div>
+
+                <!-- 4. Latence Globale & Répartition -->
+                <div class="rag-kpi-card">
+                    <div>
+                        <div class="rag-kpi-card-label">
+                            <span>4. Latence Moyenne</span>
+                            <span style="font-size: 14px;">⚡</span>
+                        </div>
+                        <div id="rag-kpi-latency" class="rag-kpi-card-value" style="color: #ea580c;">
+                            -- ms
+                        </div>
+                    </div>
+                    <div id="rag-kpi-retrieval" class="rag-kpi-card-desc">
+                        ChromaDB: -- ms | Gemini: -- ms
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3 : Diagnostic Qualité & Recommandations SGCI -->
+        <div class="rag-card" style="border-left: 5px solid #e9041e;">
+            <div class="rag-section-header">
+                <h3 class="rag-section-title">
+                    <span>📋</span> Diagnostic Qualité & Préconisations SGCI
+                </h3>
+                <span id="rag-diagnostics-course-label" style="font-size: 12px; font-weight: 700; color: #0f172a; background: #e2e8f0; padding: 4px 12px; border-radius: 6px;">
+                    --
+                </span>
+            </div>
+            <div id="rag-diagnostics-content">
+                <p style="margin: 0; color: #64748b; font-size: 13px;">Lancez une évaluation ou chargez un rapport existant pour visualiser l'analyse diagnostique.</p>
+            </div>
+        </div>
+
+        <!-- Section 4 : Tableau d'Audit Détaillé des Questions / Réponses -->
+        <div class="rag-card">
+            <div class="rag-section-header">
+                <div>
+                    <h3 class="rag-section-title">
+                        <span>🔍</span> Détail des Évaluations Unitaires (<span id="rag-tests-count">0</span> test(s))
+                    </h3>
+                    <p style="color: #64748b; font-size: 12px; margin: 3px 0 0 0;">
+                        Inspection précise des questions apprenant, des réponses générées, des scores unitaires et des latences.
+                    </p>
+                </div>
+                <div style="display: flex; gap: 10px; width: 300px;">
+                    <input type="text" id="rag-table-search" placeholder="🔍 Filtrer questions ou réponses..." oninput="filterRagEvaluationTable()" style="padding: 8px 14px; border: 1px solid #cbd5e1; border-radius: 6px; width: 100%; font-size: 12.5px; box-sizing: border-box; background: white;">
+                </div>
+            </div>
+
+            <div style="overflow-x: auto;">
+                <table class="styled-table" id="rag-eval-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 45px; text-align: center;">#</th>
+                            <th style="width: 28%;">Question Apprenant</th>
+                            <th style="width: 32%;">Réponse Formulée</th>
+                            <th style="text-align: center;">Contexte</th>
+                            <th style="text-align: center;">Fidélité</th>
+                            <th style="text-align: center;">Réponse</th>
+                            <th style="text-align: center;">Score RAG</th>
+                            <th style="text-align: center;">Latence</th>
+                            <th style="text-align: center;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rag-eval-tbody">
+                        <tr>
+                            <td colspan="9" style="text-align: center; color: #64748b; padding: 32px;">
+                                Aucun rapport chargé. Cliquez sur « Lancer l'Évaluation » ci-dessus.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+

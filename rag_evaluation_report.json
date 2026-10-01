@@ -1,0 +1,71 @@
+{
+  "timestamp": "2026-09-20 12:12:00",
+  "course_id": 89,
+  "course_title": "Gestion de projet scrum",
+  "base_id": "8fbeb2e1-6d23-4639-a5e4-00334093b4aa",
+  "total_tests": 3,
+  "averages": {
+    "context_relevance": 88.3,
+    "groundedness": 100.0,
+    "answer_relevance": 93.3,
+    "global_rag_score": 93.9,
+    "retrieval_latency_ms": 223.5,
+    "total_latency_ms": 3888.3
+  },
+  "tests": [
+    {
+      "test_id": 1,
+      "question": "De quoi traite ce cours sur Gestion de projet scrum ?",
+      "chunks_count": 2,
+      "chunks": [
+        "Le Guide Scrum officiel (version 2013 par Ken Schwaber et Jeff Sutherland) pose les règles du jeu du cadre empirique Scrum. Celui-ci repose sur trois piliers : la Transparence, l'Inspection et l'Adaptation. L'Équipe Scrum est composée du Product Owner (PO), de l'Équipe de Développement et du Scrum Master. \n\nLe Product Owner est l'unique responsable de la gestion du Product Backlog (conception, ordonnancement, clarté). C'est un rôle individuel et non un comité. \nL'Équipe de Développement est pluridisciplinaire, auto-organisée, et sa taille optimale se situe entre 3 et 9 membres (hors SM et PO, sauf s'ils développent). Elle est seule responsable des estimations d'effort et du 'comment' réaliser le travail.\nLe Scrum Master est un leader au service de l'équipe et de l'organisation, garant de l'application de la théorie et des règles de Scrum.\n\nLes événements Scrum sont limités dans le temps (Time-boxed) : \n- Le Sprint (1 mois ou moins)\n- La Planification de Sprint (max 8h pour un sprint d'un mois)\n- La Mêlée Quotidienne ou Daily Scrum (strictement 15 minutes, réservée à l'Équipe de Développement)\n- La Revue de Sprint (max 4h pour inspecter l'incrément et adapter le backlog)\n- La Rétrospective de Sprint (max 3h pour inspecter l'équipe, ses processus et outils).\n\nLes artéfacts sont le Product Backlog, le Sprint Backlog et l'Incrément. L'Incrément doit impérativement répondre à la Définition de 'Terminé' (Definition of Done - DoD) pour garantir la transparence et la qualité logiciel",
+        "le."
+      ],
+      "retrieval_ms": 295.1,
+      "generation_ms": 4966.8,
+      "total_latency_ms": 5261.9,
+      "answer": "Ce cours présente le cadre empirique Scrum, défini par ses trois piliers, ses rôles, ses événements limités dans le temps et ses artéfacts obligatoires pour garantir la qualité de l'incrément.",
+      "context_relevance": 100,
+      "groundedness": 100,
+      "answer_relevance": 100,
+      "rag_score": 100.0,
+      "judge_comment": "Le contexte fournit toutes les informations nécessaires, la réponse est parfaitement fidèle aux données extraites et répond avec précision et concision à la question posée."
+    },
+    {
+      "test_id": 2,
+      "question": "Quels sont les points cles a retenir ?",
+      "chunks_count": 2,
+      "chunks": [
+        "Le Guide Scrum officiel (version 2013 par Ken Schwaber et Jeff Sutherland) pose les règles du jeu du cadre empirique Scrum. Celui-ci repose sur trois piliers : la Transparence, l'Inspection et l'Adaptation. L'Équipe Scrum est composée du Product Owner (PO), de l'Équipe de Développement et du Scrum Master. \n\nLe Product Owner est l'unique responsable de la gestion du Product Backlog (conception, ordonnancement, clarté). C'est un rôle individuel et non un comité. \nL'Équipe de Développement est pluridisciplinaire, auto-organisée, et sa taille optimale se situe entre 3 et 9 membres (hors SM et PO, sauf s'ils développent). Elle est seule responsable des estimations d'effort et du 'comment' réaliser le travail.\nLe Scrum Master est un leader au service de l'équipe et de l'organisation, garant de l'application de la théorie et des règles de Scrum.\n\nLes événements Scrum sont limités dans le temps (Time-boxed) : \n- Le Sprint (1 mois ou moins)\n- La Planification de Sprint (max 8h pour un sprint d'un mois)\n- La Mêlée Quotidienne ou Daily Scrum (strictement 15 minutes, réservée à l'Équipe de Développement)\n- La Revue de Sprint (max 4h pour inspecter l'incrément et adapter le backlog)\n- La Rétrospective de Sprint (max 3h pour inspecter l'équipe, ses processus et outils).\n\nLes artéfacts sont le Product Backlog, le Sprint Backlog et l'Incrément. L'Incrément doit impérativement répondre à la Définition de 'Terminé' (Definition of Done - DoD) pour garantir la transparence et la qualité logiciel",
+        "le."
+      ],
+      "retrieval_ms": 180.7,
+      "generation_ms": 2079.5,
+      "total_latency_ms": 2260.2,
+      "answer": "Scrum repose sur les piliers d'inspection, d'adaptation et de transparence, portés par trois rôles distincts et des événements strictement limités dans le temps. La valeur est délivrée via des incréments conformes à la \"Definition of Done\", gérés à travers des artéfacts spécifiques.",
+      "context_relevance": 95,
+      "groundedness": 100,
+      "answer_relevance": 90,
+      "rag_score": 95.0,
+      "judge_comment": "La réponse synthétise fidèlement les informations du contexte, bien qu'une énumération des rôles ou des artéfacts aurait été encore plus complète pour répondre aux points clés."
+    },
+    {
+      "test_id": 3,
+      "question": "Quelles sont les bonnes pratiques recommandees ?",
+      "chunks_count": 2,
+      "chunks": [
+        "Le Guide Scrum officiel (version 2013 par Ken Schwaber et Jeff Sutherland) pose les règles du jeu du cadre empirique Scrum. Celui-ci repose sur trois piliers : la Transparence, l'Inspection et l'Adaptation. L'Équipe Scrum est composée du Product Owner (PO), de l'Équipe de Développement et du Scrum Master. \n\nLe Product Owner est l'unique responsable de la gestion du Product Backlog (conception, ordonnancement, clarté). C'est un rôle individuel et non un comité. \nL'Équipe de Développement est pluridisciplinaire, auto-organisée, et sa taille optimale se situe entre 3 et 9 membres (hors SM et PO, sauf s'ils développent). Elle est seule responsable des estimations d'effort et du 'comment' réaliser le travail.\nLe Scrum Master est un leader au service de l'équipe et de l'organisation, garant de l'application de la théorie et des règles de Scrum.\n\nLes événements Scrum sont limités dans le temps (Time-boxed) : \n- Le Sprint (1 mois ou moins)\n- La Planification de Sprint (max 8h pour un sprint d'un mois)\n- La Mêlée Quotidienne ou Daily Scrum (strictement 15 minutes, réservée à l'Équipe de Développement)\n- La Revue de Sprint (max 4h pour inspecter l'incrément et adapter le backlog)\n- La Rétrospective de Sprint (max 3h pour inspecter l'équipe, ses processus et outils).\n\nLes artéfacts sont le Product Backlog, le Sprint Backlog et l'Incrément. L'Incrément doit impérativement répondre à la Définition de 'Terminé' (Definition of Done - DoD) pour garantir la transparence et la qualité logiciel",
+        "le."
+      ],
+      "retrieval_ms": 194.8,
+      "generation_ms": 3948.0,
+      "total_latency_ms": 4142.8,
+      "answer": "Les bonnes pratiques consistent à respecter les trois piliers empiriques (transparence, inspection, adaptation) et à suivre strictement les rôles, événements et artéfacts définis par le cadre Scrum. L'équipe doit notamment maintenir des incréments conformes à la définition de « Terminé » et garantir l'auto-organisation des développeurs.",
+      "context_relevance": 70,
+      "groundedness": 100,
+      "answer_relevance": 90,
+      "rag_score": 86.7,
+      "judge_comment": "Le contexte fournit les fondements théoriques de Scrum permettant de répondre à la question, et la réponse synthétise fidèlement ces éléments sans hallucination."
+    }
+  ]
+}

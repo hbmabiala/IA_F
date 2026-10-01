@@ -1,0 +1,117 @@
+    <!-- Barre de navigation statique en haut avec Branding SGCI & MALAM'IA (Section 3 & 4) -->
+    <nav class="top-nav" id="main-nav" style="display: none;">
+        <div class="nav-left-group">
+            <div class="nav-brand" onclick="navigateTo('dashboard')" title="Aller au Tableau de Bord MALAM'IA" style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+                <img src="/static/img/logo_sgci.png" alt="logo.png - Société Générale Côte d'Ivoire" style="height: 36px; object-fit: contain;">
+                <div style="height: 24px; width: 1px; background: #cbd5e1;"></div>
+                <div style="display: flex; flex-direction: column; line-height: 1.15;">
+                    <span class="nav-brand-text font-display" style="font-size: 17px; font-weight: 800; color: #090a0f; letter-spacing: -0.2px;">MALAM'IA</span>
+                    <span style="font-size: 10px; font-weight: 700; color: #e60028; text-transform: uppercase; letter-spacing: 0.5px;">Plateforme de Formation</span>
+                </div>
+            </div>
+            
+            <div class="nav-links">
+                <button id="nav-dashboard" onclick="navigateTo('dashboard')" class="nav-btn">Tableau de Bord</button>
+                <button id="nav-consultation" onclick="navigateTo('consultation')" class="nav-btn">Catalogue des Formations</button>
+                <button id="nav-users" onclick="navigateTo('users')" class="nav-btn" style="display: none;">Gestion Utilisateurs</button>
+                <button id="nav-rag-eval" onclick="navigateTo('rag-eval')" class="nav-btn" style="display: none;">Audit & Évaluation RAG</button>
+            </div>
+        </div>
+
+        <!-- Sélecteur de Thème Dynamique (Blanc / Gris / Noir) -->
+        <div style="display: flex; align-items: center;">
+            <div class="theme-switcher-group" title="Changer l'ambiance visuelle de l'application">
+                <span style="font-size: 11px; font-weight: 700; color: #64748b; margin-right: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Thème</span>
+                <button type="button" class="theme-btn active" id="theme-btn-blanc" onclick="setAppTheme('blanc')" title="Thème Blanc (Clair)">
+                    <span class="theme-swatch swatch-blanc"></span> Blanc
+                </button>
+                <button type="button" class="theme-btn" id="theme-btn-gris" onclick="setAppTheme('gris')" title="Thème Gris (Slate)">
+                    <span class="theme-swatch swatch-gris"></span> Gris
+                </button>
+                <button type="button" class="theme-btn" id="theme-btn-noir" onclick="setAppTheme('noir')" title="Thème Noir (Sombre)">
+                    <span class="theme-swatch swatch-noir"></span> Noir
+                </button>
+            </div>
+
+            <!-- Menu Profil Utilisateur Unifié (Dropdown) -->
+            <div class="user-menu-wrapper" id="user-menu-wrapper">
+            <button type="button" class="user-menu-trigger" id="user-menu-trigger" onclick="toggleUserDropdown(event)" aria-label="Menu utilisateur">
+                <div class="user-avatar" id="nav-user-avatar">AD</div>
+                <span id="current-user-display" class="user-trigger-name">Admin</span>
+                <span class="user-trigger-chevron" id="user-menu-chevron">▾</span>
+            </button>
+
+            <!-- Menu Déroulant Élégant -->
+            <div class="user-dropdown-card" id="user-dropdown-card" style="display: none;">
+                <div class="dropdown-user-header">
+                    <div class="dropdown-avatar" id="dropdown-user-avatar">AD</div>
+                    <div class="dropdown-meta">
+                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                            <span class="dropdown-name" id="dropdown-user-name">Admin Super</span>
+                            <span id="dropdown-user-role-badge" class="role-badge role-superadmin">Super Admin</span>
+                        </div>
+                        <div class="dropdown-matricule" id="dropdown-user-matricule">Matricule : ADMIN001</div>
+                        <div class="dropdown-sub" id="dropdown-user-sub">admin@sgci.ci</div>
+                    </div>
+                </div>
+
+                <div class="dropdown-divider"></div>
+
+                <div class="dropdown-menu-list">
+                    <button type="button" class="dropdown-menu-item" onclick="openUserProfileModal(); toggleUserDropdown(false);">
+                        
+                        <div class="dropdown-item-content">
+                            <span class="dropdown-item-title">Mon Profil</span>
+                            <span class="dropdown-item-subtitle">Poste, direction, contrat & infos</span>
+                        </div>
+                    </button>
+
+                    <button type="button" class="dropdown-menu-item" onclick="navigateTo('consultation'); toggleUserDropdown(false);">
+                        
+                        <div class="dropdown-item-content">
+                            <span class="dropdown-item-title">Mes Formations</span>
+                            <span class="dropdown-item-subtitle">Accéder aux formations et cours</span>
+                        </div>
+                    </button>
+
+                    <button type="button" class="dropdown-menu-item" onclick="openEvaluationsHistoryModal(); toggleUserDropdown(false);">
+                        
+                        <div class="dropdown-item-content">
+                            <span class="dropdown-item-title">Mes Évaluations & Certifications</span>
+                            <span class="dropdown-item-subtitle">Historique, scores et diagnostics IA</span>
+                        </div>
+                    </button>
+
+                    <button type="button" class="dropdown-menu-item" id="dropdown-assignments-btn" onclick="handleMenuAssignments(); toggleUserDropdown(false);">
+                        <span class="dropdown-item-icon"></span>
+                        <div class="dropdown-item-content">
+                            <span class="dropdown-item-title" id="dropdown-assignments-title">Assignations & Parcours</span>
+                            <span class="dropdown-item-subtitle" id="dropdown-assignments-desc">Piloter les règles et affectations</span>
+                        </div>
+                    </button>
+
+                    <button type="button" class="dropdown-menu-item" id="dropdown-rag-eval-btn" onclick="navigateTo('rag-eval'); toggleUserDropdown(false);" style="display: none;">
+                        <span class="dropdown-item-icon">⚖️</span>
+                        <div class="dropdown-item-content">
+                            <span class="dropdown-item-title">Évaluation & Audit RAG</span>
+                            <span class="dropdown-item-subtitle">RAG Triad & Benchmark IA (Super Admin)</span>
+                        </div>
+                    </button>
+                </div>
+
+                <div class="dropdown-divider"></div>
+
+                <div class="dropdown-footer">
+                    <button type="button" class="dropdown-menu-item dropdown-logout-item" onclick="performLogout(); toggleUserDropdown(false);">
+                        
+                        <div class="dropdown-item-content">
+                            <span class="dropdown-item-title" style="color: #ef4444; font-weight: 700;">Déconnexion</span>
+                            <span class="dropdown-item-subtitle">Quitter votre session</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+        </div>
+    </nav>
+

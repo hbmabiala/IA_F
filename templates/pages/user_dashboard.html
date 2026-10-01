@@ -1,0 +1,83 @@
+<div id="user-dashboard-view" style="width: 100%; max-width: 1100px; margin: 0 auto; display: none;">
+            <div class="header-bar" style="margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                <div>
+                    <h1 style="margin: 0; font-size: 24px; color: #0f172a; font-weight: 800;">Mon Espace de Formation</h1>
+                    <p style="margin: 4px 0 0 0; color: #64748b; font-size: 13.5px;">Bienvenue sur votre parcours de développement des compétences MALAM'IA.</p>
+                </div>
+                <button onclick="navigateTo('consultation')" class="submit-btn" style="width: auto; padding: 10px 20px; margin: 0; background: #e9041e; font-size: 13px; font-weight: 700;">
+                    Catalogue des Formations →
+                </button>
+            </div>
+
+            <!-- Filigrane animé officiel — Direction Innovation Digitale (Espace Apprenant) -->
+            <div class="watermark-strip-animated watermark-dashboard" title="Direction Innovation Digitale - SGCI">
+                <div class="watermark-track">
+                    <span class="watermark-logo-txt">DIRECTION INNOVATION DIGITALE</span>
+                    <span class="watermark-sep">✦</span>
+                    <span class="watermark-copy">Espace de Formation Intelligente • Tous droits réservés © Société Générale Côte d'Ivoire</span>
+                    <span class="watermark-sep">✦</span>
+                    <span class="watermark-logo-txt">DIRECTION INNOVATION DIGITALE</span>
+                    <span class="watermark-sep">✦</span>
+                    <span class="watermark-copy">Tous droits réservés © SGCI</span>
+                </div>
+            </div>
+
+            <!-- Bannière d'alerte en cas de formation en retard -->
+            <div id="user-overdue-banner" style="display: none; background: #fef2f2; border: 1.5px solid #fecaca; border-radius: 12px; padding: 16px 20px; margin-bottom: 22px; align-items: center; gap: 14px;">
+                <div style="font-size: 24px;"></div>
+                <div style="flex: 1;">
+                    <h4 style="margin: 0; color: #991b1b; font-size: 14.5px; font-weight: 800;">Attention : vous avez une formation en retard</h4>
+                    <p style="margin: 2px 0 0 0; color: #b91c1c; font-size: 12.5px;">L'échéance de 10 jours ouvrés a été dépassée. Veuillez finaliser votre cours et passer l'évaluation dès que possible.</p>
+                </div>
+            </div>
+            
+            <!-- 4 Cartes KPI Apprenant (Section 47) -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 26px;">
+                <div style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px 22px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border-top: 3px solid #000000;">
+                    <div style="font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase;">Formations assignées</div>
+                    <div id="user-kpi-assigned-count" style="font-size: 30px; font-weight: 800; color: #000000; margin-top: 4px;">0</div>
+                    <div style="font-size: 11.5px; color: #64748b; margin-top: 4px;">Parcours obligatoires</div>
+                </div>
+                <div style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px 22px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border-top: 3px solid #000000;">
+                    <div style="font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase;">Formations en cours</div>
+                    <div id="user-kpi-in-progress-count" style="font-size: 30px; font-weight: 800; color: #000000; margin-top: 4px;">0</div>
+                    <div style="font-size: 11.5px; color: #64748b; margin-top: 4px;">Lectures démarrées</div>
+                </div>
+                <div style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px 22px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border-top: 3px solid #e9041e;">
+                    <div style="font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase;">Formations validées</div>
+                    <div id="user-kpi-completed-count" style="font-size: 30px; font-weight: 800; color: #e9041e; margin-top: 4px;">0</div>
+                    <div style="font-size: 11.5px; color: #000000; font-weight: 600; margin-top: 4px;">Certifiées avec succès</div>
+                </div>
+                <div style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px 22px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border-top: 3px solid #000000;">
+                    <div style="font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase;">Progression moyenne</div>
+                    <div id="user-kpi-avg-progress" style="font-size: 30px; font-weight: 800; color: #000000; margin-top: 4px;">0%</div>
+                    <div style="font-size: 11.5px; color: #64748b; margin-top: 4px;">Sur l'ensemble des modules</div>
+                </div>
+            </div>
+
+            <!-- Liste des cours assignés avec échéances à 10 jours ouvrés -->
+            <div style="background: white; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); overflow: hidden;">
+                <div style="padding: 16px 22px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
+                    <span style="font-weight: 800; font-size: 15px; color: #0f172a;">Mes Parcours & Formations Assignées (<span id="user-assigned-badge-count">0</span>)</span>
+                    <button onclick="navigateTo('consultation')" style="background: none; border: none; color: #e9041e; font-weight: 700; font-size: 13px; cursor: pointer;">Accéder à tout le catalogue →</button>
+                </div>
+                
+                <div style="max-height: 480px; overflow-y: auto;">
+                    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                        <thead>
+                            <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0; font-size: 11.5px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">
+                                <th style="padding: 12px 16px; width: 60px;">Vignette</th>
+                                <th style="padding: 12px 16px;">Titre de la formation</th>
+                                <th style="padding: 12px 16px; width: 140px;">Échéance (10J)</th>
+                                <th style="padding: 12px 16px; width: 120px;">Statut</th>
+                                <th style="padding: 12px 16px; width: 140px;">Progression</th>
+                                <th style="padding: 12px 16px; text-align: right; width: 130px;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-assigned-courses-tbody">
+                            <!-- Rangs compacts générés dynamiquement -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>

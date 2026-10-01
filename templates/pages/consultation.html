@@ -1,0 +1,36 @@
+    <div id="page-consultation" class="page active">
+        <!-- En-tête Catalogue avec Titre + Bouton d'action Créer une Formation -->
+        <div class="catalog-header-bar" style="width: 85%; max-width: 1150px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; flex-wrap: wrap; gap: 15px;">
+            <div>
+                <h1 style="margin: 0; font-size: 26px; font-weight: 800; color: #0f172a; letter-spacing: -0.5px;">Catalogue des Formations</h1>
+                <p style="margin: 5px 0 0 0; color: #64748b; font-size: 14px;">Consultez les formations disponibles et suivez vos parcours d'apprentissage.</p>
+            </div>
+            
+            <!-- Bouton Créer une formation (visible uniquement Admin / Super Admin) -->
+            <button id="catalog-btn-create" onclick="openNewCourseForm()" class="btn-create-course" style="display: none;">
+                <span style="font-size: 18px; line-height: 1; font-weight: bold;">+</span>
+                <span>Créer une formation</span>
+            </button>
+        </div>
+
+        <!-- Onglets de filtrage du catalogue & Recherche -->
+        <div style="width: 85%; max-width: 1150px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
+            <div class="catalog-tabs" id="catalog-filter-tabs">
+                <button class="catalog-tab-btn active" id="tab-all-courses" onclick="setCatalogFilter('all')">
+                     Toutes les formations (<span id="total-courses-badge">0</span>)
+                </button>
+                <button class="catalog-tab-btn" id="tab-assigned-courses" onclick="setCatalogFilter('assigned')">
+                     Formations assignées (<span id="assigned-courses-badge">0</span>)
+                </button>
+            </div>
+            <div style="width: 280px;">
+                <input type="text" id="course-search-input" placeholder="Rechercher une formation..." oninput="filterCatalogCourses()" style="padding: 9px 14px; border: 1px solid #cbd5e1; border-radius: 6px; width: 100%; font-size: 13px; box-sizing: border-box;">
+            </div>
+        </div>
+
+        <div id="course-catalog" class="catalog-grid">
+            <!-- Les cartes de formations apparaîtront ici -->
+        </div>
+    </div>
+
+    <!-- Page Création / Modification -->

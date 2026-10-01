@@ -1,0 +1,286 @@
+    <div id="page-evaluation" class="page active scrollable-page" style="padding: 24px 30px; width: 100%; max-width: 1050px; margin: 0 auto; box-sizing: border-box;">
+        <!-- Barre de navigation / Entête de l'évaluation -->
+        <div class="eval-header-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px; background: #ffffff; padding: 14px 22px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.04); border: 1px solid #e2e8f0; width: 100%; box-sizing: border-box;">
+            <div style="display: flex; align-items: center; gap: 14px;">
+                <button onclick="exitEvaluation()" class="back-btn" style="margin-bottom: 0; padding: 8px 16px; background: #f8fafc; border-radius: 8px; font-weight: 700; color: #1e293b; border: 1px solid #cbd5e1; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13.5px;">
+                    ← Retour au cours
+                </button>
+                <div>
+                    <h1 id="eval-course-title" style="margin: 0; font-size: 19px; color: #0f172a; font-weight: 800;">Évaluation des Connaissances</h1>
+                    <span id="eval-course-domain" style="font-size: 12px; color: #e9041e; font-weight: 600;">Module certifiant IA</span>
+                </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span id="eval-badge-status" style="background: #f1f5f9; color: #000000; border: 1px solid #cbd5e1; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
+                     Certification SGCI
+                </span>
+            </div>
+        </div>
+
+        <!-- 1. ÉCRAN D'ACCUEIL / INTRO -->
+        <div id="eval-screen-intro" class="eval-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 36px 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); text-align: center; max-width: 800px; margin: 20px auto;">
+            <div style="width: 76px; height: 76px; border-radius: 50%; background: #000000; color: white; display: flex; align-items: center; justify-content: center; font-size: 36px; margin: 0 auto 20px; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);">
+                
+            </div>
+            <h2 style="font-size: 24px; color: #0f172a; font-weight: 800; margin-bottom: 12px;">Test d'Évaluation des Connaissances</h2>
+            <p style="color: #64748b; font-size: 15px; line-height: 1.6; max-width: 620px; margin: 0 auto 24px;">
+                Mesurez votre maîtrise des compétences clés abordées dans ce cours. À l'issue de ce test, notre <strong>Tuteur Pédagogique IA</strong> analysera précisément vos points forts, identifiera les notions à consolider et vous proposera un parcours de renforcement sur-mesure.
+            </p>
+
+            <!-- Encadré Historique / Dernière Évaluation si déjà passée -->
+            <div id="eval-intro-past-result" style="display: none; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 14px; padding: 20px 24px; margin: 0 auto 24px; max-width: 620px; text-align: left; box-shadow: 0 2px 10px rgba(0,0,0,0.03);">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+                    <div>
+                        <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Votre dernière évaluation enregistrée</div>
+                        <div style="display: flex; align-items: center; gap: 12px; margin-top: 6px;">
+                            <span id="eval-intro-past-score" style="font-size: 24px; font-weight: 800; color: #0f172a;">0%</span>
+                            <span id="eval-intro-past-badge" style="font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 12px; background: #000000; color: #ffffff;">Validé</span>
+                            <span id="eval-intro-past-date" style="font-size: 12px; color: #64748b;">-</span>
+                        </div>
+                    </div>
+                    <button type="button" onclick="viewPastEvaluationDiagnostic()" class="action-btn-sm" style="background: #000000; color: white; padding: 9px 18px; border-radius: 8px; font-weight: 700; font-size: 13px; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25);">
+                         Consulter mon diagnostic & corrigé
+                    </button>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; max-width: 600px; margin: 0 auto 30px;">
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; text-align: center;">
+                    <div style="font-size: 20px; font-weight: 800; color: #0f172a;" id="eval-intro-qcount">5</div>
+                    <div style="font-size: 12px; color: #64748b; font-weight: 600; margin-top: 4px;">Questions interactives</div>
+                </div>
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; text-align: center;">
+                    <div style="font-size: 20px; font-weight: 800; color: #e9041e;">70%</div>
+                    <div style="font-size: 12px; color: #64748b; font-weight: 600; margin-top: 4px;">Score requis pour valider</div>
+                </div>
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; text-align: center;">
+                    <div style="font-size: 20px; font-weight: 800; color: #000000;">IA Live</div>
+                    <div style="font-size: 12px; color: #64748b; font-weight: 600; margin-top: 4px;">Diagnostic personnalisé</div>
+                </div>
+            </div>
+
+            <button id="eval-intro-start-btn" onclick="startQuizQuestions()" class="submit-btn" style="width: auto; padding: 14px 40px; font-size: 15px; font-weight: 800; background: #000000; border: none; border-radius: 10px; color: white; cursor: pointer; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4); display: inline-flex; align-items: center; gap: 10px;">
+                <span id="eval-intro-start-text"> Commencer le test maintenant</span>
+            </button>
+        </div>
+
+        <!-- 2. ÉCRAN QUESTIONS EN COURS -->
+        <div id="eval-screen-questions" style="display: none; max-width: 820px; margin: 0 auto;">
+            <!-- Progression -->
+            <div style="margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <span style="font-size: 13px; font-weight: 700; color: #334155;" id="eval-progress-text">Question 1 sur 5</span>
+                    <span style="font-size: 12px; font-weight: 700; color: #e9041e; background: #fee2e2; padding: 3px 10px; border-radius: 12px;" id="eval-current-concept-badge">Notion</span>
+                </div>
+                <div style="width: 100%; height: 8px; background: #e2e8f0; border-radius: 10px; overflow: hidden;">
+                    <div id="eval-progress-bar-fill" style="width: 20%; height: 100%; background: #e9041e; border-radius: 10px; transition: width 0.3s ease;"></div>
+                </div>
+            </div>
+
+            <!-- Carte de Question -->
+            <div class="eval-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 32px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); margin-bottom: 24px;">
+                <h3 id="eval-question-text" style="margin: 0 0 24px 0; font-size: 18px; color: #0f172a; font-weight: 700; line-height: 1.5;">
+                    Intitulé de la question
+                </h3>
+
+                <!-- Options de réponse -->
+                <div id="eval-options-container" style="display: flex; flex-direction: column; gap: 12px;">
+                    <!-- Rempli dynamiquement -->
+                </div>
+            </div>
+
+            <!-- Barre de navigation entre questions -->
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <button id="eval-btn-prev" onclick="prevQuizQuestion()" class="action-btn-sm" style="padding: 10px 20px; font-size: 13px; font-weight: 700; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; color: #334155; cursor: pointer;">
+                    ◀ Précédente
+                </button>
+                <button id="eval-btn-next" onclick="nextQuizQuestion()" class="action-btn-sm" style="padding: 10px 24px; font-size: 13px; font-weight: 700; background: #e9041e; border: none; border-radius: 8px; color: white; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+                    <span>Suivante ▶</span>
+                </button>
+                <button id="eval-btn-submit" onclick="submitEvaluation()" class="submit-btn" style="display: none; width: auto; padding: 10px 26px; font-size: 14px; font-weight: 800; background: #e9041e; border: none; border-radius: 8px; color: white; cursor: pointer; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);">
+                    Terminer et obtenir mon diagnostic IA
+                </button>
+            </div>
+        </div>
+
+        <!-- 2b. ÉCRAN ÉPREUVE ORALE (Section 36 & 37 : Formations assignées = 30% Oral, 70% QCM) -->
+        <div id="eval-screen-oral" style="display: none; max-width: 820px; margin: 0 auto;">
+            <div style="margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <span style="font-size: 13px; font-weight: 700; color: #334155;">Épreuve Orale (30% de la note finale)</span>
+                    <span style="font-size: 12px; font-weight: 700; color: #e9041e; background: #fee2e2; padding: 3px 10px; border-radius: 12px;">Mise en situation SGCI</span>
+                </div>
+                <div style="width: 100%; height: 8px; background: #e2e8f0; border-radius: 10px; overflow: hidden;">
+                    <div style="width: 100%; height: 100%; background: #e9041e; border-radius: 10px;"></div>
+                </div>
+            </div>
+
+            <div class="eval-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 32px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); margin-bottom: 24px;">
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                    <div style="width: 44px; height: 44px; border-radius: 50%; background: #ede9fe; color: #7c3aed; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold;">🎤</div>
+                    <div>
+                        <h3 style="margin: 0; font-size: 18px; color: #0f172a; font-weight: 800;">Épreuve d'Expression et Mise en Situation Orale</h3>
+                        <p style="margin: 3px 0 0 0; color: #64748b; font-size: 13px;">Répondez à voix haute ou par écrit pour évaluer votre clarté, pertinence et maîtrise professionnelle.</p>
+                    </div>
+                </div>
+
+                <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+                    <div style="font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px;">Consigne / Sujet de l'épreuve orale :</div>
+                    <div id="eval-oral-question-text" style="font-size: 16px; font-weight: 700; color: #0f172a; line-height: 1.5;">
+                        Chargement de la question orale...
+                    </div>
+                </div>
+
+                <!-- Enregistreur audio interactif -->
+                <div style="background: #ffffff; border: 2px dashed #cbd5e1; border-radius: 14px; padding: 26px; text-align: center; margin-bottom: 20px;">
+                    <div id="oral-recording-status" style="font-size: 14px; font-weight: 700; color: #64748b; margin-bottom: 15px;">
+                        Cliquez sur le microphone pour enregistrer votre réponse orale (ou utilisez la saisie écrite ci-dessous)
+                    </div>
+                    
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
+                        <button type="button" id="btn-start-record-oral" onclick="startOralRecording()" class="action-btn-sm" style="background: #e9041e; color: white; padding: 12px 24px; border-radius: 50px; font-weight: 800; font-size: 14px; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(233,4,30,0.3);">
+                            <span>⏺ Démarrer l'enregistrement vocal</span>
+                        </button>
+                        <button type="button" id="btn-stop-record-oral" onclick="stopOralRecording()" class="action-btn-sm" style="display: none; background: #0f172a; color: white; padding: 12px 24px; border-radius: 50px; font-weight: 800; font-size: 14px; border: none; cursor: pointer; align-items: center; gap: 8px;">
+                            <span>⏹ Arrêter l'enregistrement</span>
+                        </button>
+                    </div>
+
+                    <div id="oral-audio-player-box" style="display: none; margin-top: 15px;">
+                        <audio id="eval-oral-audio-playback" controls style="width: 100%; max-width: 480px;"></audio>
+                    </div>
+                </div>
+
+                <!-- Alternative écrite / transcription -->
+                <div style="margin-top: 16px;">
+                    <label for="eval-oral-text-response" style="font-size: 13px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">
+                        Transcription ou réponse formulée par écrit :
+                    </label>
+                    <textarea id="eval-oral-text-response" rows="4" placeholder="Votre réponse orale transcrite ou votre argumentation rédigée en contexte SGCI..." style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13.5px; font-family: inherit; box-sizing: border-box;"></textarea>
+                    <small style="color: #64748b; font-size: 11.5px; margin-top: 4px; display: block;">
+                        L'IA MALAM'IA analysera vos arguments, la pertinence réglementaire et le vocabulaire corporate.
+                    </small>
+                </div>
+            </div>
+
+            <!-- Boutons de validation finale -->
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <button type="button" onclick="backToQcmFromOral()" class="action-btn-sm" style="padding: 10px 20px; font-size: 13px; font-weight: 700; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; color: #334155; cursor: pointer;">
+                    ◀ Revoir les questions QCM
+                </button>
+                <button type="button" id="btn-submit-oral-and-finish" onclick="submitOralAndFinish()" class="submit-btn" style="width: auto; padding: 12px 30px; font-size: 14.5px; font-weight: 800; background: #e9041e; border: none; border-radius: 8px; color: white; cursor: pointer; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);">
+                    Valider l'épreuve orale et clôturer l'évaluation →
+                </button>
+            </div>
+        </div>
+
+        <!-- 3. ÉCRAN DE CHARGEMENT DU DIAGNOSTIC IA -->
+        <div id="eval-screen-loading" style="display: none; text-align: center; padding: 60px 20px; max-width: 600px; margin: 40px auto; background: white; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 8px 30px rgba(0,0,0,0.06);">
+            <div class="spinner" style="margin: 0 auto 24px; width: 50px; height: 50px; border-width: 4px; border-top-color: #e9041e;"></div>
+            <h3 style="color: #0f172a; font-size: 20px; font-weight: 800; margin-bottom: 8px;">L'IA Pédagogique analyse vos résultats...</h3>
+            <p style="color: #64748b; font-size: 14px; line-height: 1.5; margin: 0 auto; max-width: 440px;">
+                Évaluation de vos réponses, détection des notions acquises et génération de votre bilan personnalisé en direct.
+            </p>
+        </div>
+
+        <!-- 4. ÉCRAN RÉSULTATS & DIAGNOSTIC COMPLET DE L'IA -->
+        <div id="eval-screen-results" style="display: none; max-width: 900px; margin: 0 auto;">
+            <!-- Bannière de Résultat Principal -->
+            <div id="eval-result-banner" class="eval-card" style="background: #ffffff; border-radius: 16px; padding: 28px 32px; box-shadow: 0 4px 25px rgba(0,0,0,0.05); margin-bottom: 24px; border: 2px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
+                <div style="display: flex; align-items: center; gap: 22px;">
+                    <div id="eval-result-circle" style="width: 86px; height: 86px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 800; font-size: 24px; box-shadow: 0 4px 14px rgba(0,0,0,0.08);">
+                        <span id="eval-result-score-percent">0%</span>
+                        <span id="eval-result-score-fraction" style="font-size: 11px; opacity: 0.85; font-weight: 600;">0/0</span>
+                    </div>
+                    <div>
+                        <div id="eval-result-badge" style="display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">Statut</div>
+                        <h2 id="eval-result-heading" style="margin: 0; font-size: 20px; color: #0f172a; font-weight: 800;">Titre du résultat</h2>
+                        <p id="eval-result-subtext" style="margin: 4px 0 0 0; color: #64748b; font-size: 13.5px;">Message de statut</p>
+                        
+                        <!-- Détail de pondération QCM (70%) + Oral (30%) pour formations assignées -->
+                        <div id="eval-result-weights-breakdown" style="display: none; margin-top: 10px; font-size: 12.5px; color: #334155; background: #f8fafc; padding: 6px 12px; border-radius: 6px; border: 1px solid #e2e8f0;">
+                            <span style="font-weight: 700;">Détail :</span> Écrit QCM : <strong id="eval-weight-qcm">0%</strong> (pondéré 70%) | Oral : <strong id="eval-weight-oral">0%</strong> (pondéré 30%) | Seuil : <strong>70%</strong>
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button onclick="retakeCurrentEvaluation()" class="action-btn-sm" style="background: #f8fafc; color: #334155; border: 1px solid #cbd5e1; font-weight: 700; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-size: 13px; display: inline-flex; align-items: center; gap: 6px;">
+                        Repasser le test
+                    </button>
+                    <button onclick="exitEvaluation()" class="action-btn-sm" style="background: #000000; color: white; border: none; font-weight: 700; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-size: 13px; display: inline-flex; align-items: center; gap: 6px;">
+                        ← Retour au cours
+                    </button>
+                </div>
+            </div>
+
+            <!-- Bilan du Tuteur Pédagogique IA -->
+            <div class="eval-card" style="background: linear-gradient(135deg, #f8fafc 0%, #ecfeff 100%); border: 1.5px solid #a7f3d0; border-radius: 16px; padding: 24px 28px; box-shadow: 0 4px 20px rgba(16, 185, 129, 0.08); margin-bottom: 24px;">
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 14px;">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #000000; color: white; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);">IA</div>
+                    <div>
+                        <h3 style="margin: 0; font-size: 16px; color: #065f46; font-weight: 800;">Bilan du Tuteur Pédagogique IA</h3>
+                        <span style="font-size: 12px; color: #047857;">Diagnostic bienveillant et analyse personnalisée</span>
+                    </div>
+                </div>
+                <div id="eval-diagnostic-bilan" style="color: #1e293b; font-size: 14.5px; line-height: 1.6; font-weight: 500;">
+                    <!-- Bilan textuel IA -->
+                </div>
+            </div>
+
+            <!-- Diagnostic Notions : 2 Colonnes (Points Forts vs Points à Consolider) -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; margin-bottom: 24px;">
+                <!-- Points Forts -->
+                <div class="eval-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 22px; box-shadow: 0 2px 12px rgba(0,0,0,0.03);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
+                        <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#000000;margin-right:6px;"></span>
+                        <h4 style="margin: 0; font-size: 15px; color: #0f172a; font-weight: 800;">Points Forts & Notions Maîtrisées</h4>
+                    </div>
+                    <div id="eval-notions-acquises-list" style="display: flex; flex-direction: column; gap: 10px;">
+                        <!-- Rempli dynamiquement -->
+                    </div>
+                </div>
+
+                <!-- Points à Consolider -->
+                <div class="eval-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 22px; box-shadow: 0 2px 12px rgba(0,0,0,0.03);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
+                        <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#eab308;margin-right:6px;"></span>
+                        <h4 style="margin: 0; font-size: 15px; color: #0f172a; font-weight: 800;">Notions à Consolider & Réviser</h4>
+                    </div>
+                    <div id="eval-notions-renforcer-list" style="display: flex; flex-direction: column; gap: 10px;">
+                        <!-- Rempli dynamiquement -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Détail Pédagogique des Questions & Réponses avec Explications -->
+            <div class="eval-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.03); margin-bottom: 24px;">
+                <h4 style="margin: 0 0 16px 0; font-size: 16px; color: #0f172a; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+                    <span>Corrigé Pédagogique Détaillé</span>
+                </h4>
+                <div id="eval-questions-review-list" style="display: flex; flex-direction: column; gap: 16px;">
+                    <!-- Cartes détaillées avec vos réponses, la bonne réponse et l'explication IA -->
+                </div>
+            </div>
+
+            <!-- PARCOURS DE RENFORCEMENT PERSONNALISÉ (Si notions fragiles) -->
+            <div id="eval-reinforcement-section" class="eval-card" style="background: linear-gradient(135deg, #eff6ff 0%, #f8fafc 100%); border: 1.5px solid #bfdbfe; border-radius: 16px; padding: 26px 30px; box-shadow: 0 4px 20px rgba(2, 132, 199, 0.08); margin-bottom: 30px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin-bottom: 14px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        
+                        <div>
+                            <h3 style="margin: 0; font-size: 17px; color: #1e3a8a; font-weight: 800;">Parcours de Renforcement Personnalisé</h3>
+                            <span style="font-size: 12.5px; color: #000000;">Un accompagnement direct pour maîtriser 100% du module</span>
+                        </div>
+                    </div>
+                    <button onclick="launchReinforcementWithAiTutor()" class="submit-btn" style="width: auto; padding: 11px 22px; font-size: 13.5px; font-weight: 800; background: #e9041e; border: none; border-radius: 8px; color: white; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);">
+                        Travailler ces notions avec MALAM'IA
+                    </button>
+                </div>
+                <div id="eval-reinforcement-summary" style="background: #ffffff; border: 1px solid #dbeafe; border-radius: 10px; padding: 18px; color: #334155; font-size: 13.5px; line-height: 1.6;">
+                    <!-- Synthèse du renforcement générée par Gemini -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page Gestion Utilisateurs -->

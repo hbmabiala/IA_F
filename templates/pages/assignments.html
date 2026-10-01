@@ -1,0 +1,159 @@
+    <div id="page-assignments" class="page active scrollable-page">
+        <div class="header-bar" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px;">
+            <div>
+                <h1>Gestion des Assignations & Parcours</h1>
+                <p style="color: #64748b; margin-top: 5px;">Définissez des règles permanentes d'attribution automatique par profil ou lancez des assignations ciblées.</p>
+            </div>
+            <button onclick="openNewRuleModal()" class="submit-btn" style="width: auto; padding: 11px 22px; margin: 0; background: #e9041e; font-size: 13px;">
+                Nouveau Parcours Dynamique
+            </button>
+        </div>
+
+        <div class="assignments-container" style="margin-bottom: 25px;">
+            <!-- Onglets d'assignation -->
+            <div class="catalog-tabs" style="display: inline-flex; margin-bottom: 20px;">
+                <button class="catalog-tab-btn active" id="tab-btn-rules" onclick="switchAssignmentTab('rules')">
+                     Règles & Parcours Automatiques (<span id="rules-count-badge">0</span>)
+                </button>
+                <button class="catalog-tab-btn" id="tab-btn-manual" onclick="switchAssignmentTab('manual')">
+                    Assignation Ponctuelle / Multicritères
+                </button>
+                <button class="catalog-tab-btn" id="tab-btn-matrix" onclick="switchAssignmentTab('matrix')">
+                    Suivi Global des Attributions (<span id="matrix-count-badge">0</span>)
+                </button>
+            </div>
+
+            <!-- ONGLET 1 : RÈGLES & PARCOURS AUTOMATIQUES -->
+            <div id="assignment-section-rules">
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px 20px; margin-bottom: 25px; display: flex; align-items: center; justify-content: space-between; gap: 15px;">
+                    <div style="font-size: 13px; color: #475569; line-height: 1.5;">
+                        <strong>Attribution Automatique Permanente :</strong> Tout collaborateur (actuel ou nouvellement créé) correspondant aux critères d'un parcours actif (ex: <em>Direction Data + Poste Data Scientist + Stagiaire</em>) reçoit automatiquement ses formations sans action manuelle quotidienne.
+                    </div>
+                </div>
+
+                <div id="assignment-rules-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 20px;">
+                    <!-- Cards générées dynamiquement -->
+                </div>
+            </div>
+
+            <!-- ONGLET 2 : ASSIGNATION PONCTUELLE MULTICRITÈRES -->
+            <div id="assignment-section-manual" style="display: none;">
+                <div class="user-management-card" style="width: 100%; box-sizing: border-box; margin-bottom: 25px;">
+                    <h3 style="margin: 0 0 15px 0; color: #0f172a; font-size: 16px;">1. Sélectionner les Formations à Assigner</h3>
+                    <div style="display: flex; gap: 10px; margin-bottom: 12px;">
+                        <input type="text" id="manual-course-search" placeholder="Filtrer les cours..." oninput="renderManualCoursesSelection()" style="padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; flex: 1;">
+                        <button type="button" onclick="selectAllManualCourses(true)" class="action-btn-sm" style="background: #f1f5f9; color: #000000;">Tout cocher</button>
+                        <button type="button" onclick="selectAllManualCourses(false)" class="action-btn-sm" style="background: #f1f5f9; color: #475569;">Tout décocher</button>
+                    </div>
+                    <div id="manual-courses-selection-list" style="max-height: 200px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 8px; background: #fafafa;">
+                        <!-- Checkboxes cours -->
+                    </div>
+                    <div id="manual-courses-count-info" style="font-size: 12px; color: #64748b; font-weight: 600; margin-top: 6px;">0 formation(s) sélectionnée(s)</div>
+                </div>
+
+                <div class="user-management-card" style="width: 100%; box-sizing: border-box;">
+                    <h3 style="margin: 0 0 15px 0; color: #0f172a; font-size: 16px;">2. Ciblage Multicritères des Collaborateurs</h3>
+                    <div class="user-form-grid" style="margin-bottom: 20px;">
+                        <div class="form-group">
+                            <label style="font-size: 13px; font-weight: 600;">Direction / Département</label>
+                            <input type="text" id="manual-filter-direction" placeholder="Ex: Data, Risques, DSI..." oninput="filterManualTargetUsers()" style="font-size: 13px;">
+                        </div>
+                        <div class="form-group">
+                            <label style="font-size: 13px; font-weight: 600;">Poste / Fonction</label>
+                            <input type="text" id="manual-filter-poste" placeholder="Ex: Data Scientist, Stagiaire..." oninput="filterManualTargetUsers()" style="font-size: 13px;">
+                        </div>
+                        <div class="form-group">
+                            <label style="font-size: 13px; font-weight: 600;">Type de contrat / Statut</label>
+                            <select id="manual-filter-contrat" onchange="filterManualTargetUsers()" style="font-size: 13px;">
+                                <option value="">Tous les contrats</option>
+                                <option value="Stagiaire">Stagiaires uniquement</option>
+                                <option value="CDI">CDI uniquement</option>
+                                <option value="CDD">CDD uniquement</option>
+                                <option value="Alternant">Alternants uniquement</option>
+                                <option value="Prestataire">Prestataires uniquement</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label style="font-size: 13px; font-weight: 600;">Ancienneté / Date d'arrivée</label>
+                            <select id="manual-filter-anciennete" onchange="filterManualTargetUsers()" style="font-size: 13px;">
+                                <option value="">Toute ancienneté</option>
+                                <option value="30">Nouveaux arrivants (&lt; 1 mois)</option>
+                                <option value="90">Nouveaux arrivants (&lt; 3 mois)</option>
+                                <option value="180">Arrivés depuis &lt; 6 mois</option>
+                                <option value="365">Arrivés depuis &lt; 1 an</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <span style="font-weight: 700; font-size: 14px; color: #0f172a;">
+                            Collaborateurs ciblés (<span id="manual-target-users-count">0</span>)
+                        </span>
+                        <div style="display: flex; gap: 8px;">
+                            <button type="button" onclick="selectAllManualUsers(true)" class="action-btn-sm" style="background: #f1f5f9; color: #000000;">Tout cocher</button>
+                            <button type="button" onclick="selectAllManualUsers(false)" class="action-btn-sm" style="background: #f1f5f9; color: #475569;">Tout décocher</button>
+                        </div>
+                    </div>
+
+                    <div style="max-height: 280px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 8px;">
+                        <table class="styled-table" style="margin-top: 0;">
+                            <thead>
+                                <tr>
+                                    <th style="width: 40px;"></th>
+                                    <th>Matricule</th>
+                                    <th>Nom & Prénom</th>
+                                    <th>Direction</th>
+                                    <th>Poste</th>
+                                    <th>Contrat</th>
+                                    <th>Arrivée</th>
+                                </tr>
+                            </thead>
+                            <tbody id="manual-target-users-tbody">
+                                <!-- Rempli dynamiquement -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end; align-items: center; gap: 15px; margin-top: 20px;">
+                        <span id="manual-assign-msg" style="font-weight: 600; font-size: 13px;"></span>
+                        <button type="button" onclick="executeManualBulkAssign()" class="submit-btn" style="width: auto; padding: 12px 30px; margin: 0; background: #e9041e;">
+                            Assigner la sélection
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ONGLET 3 : MATRICE DE SUIVI & RÉVOCATION -->
+            <div id="assignment-section-matrix" style="display: none;">
+                <div class="user-management-card" style="width: 100%; box-sizing: border-box;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px;">
+                        <h3 style="margin: 0; font-size: 16px; color: #0f172a;">Répertoire de toutes les assignations actives</h3>
+                        <input type="text" id="matrix-search" placeholder="Filtrer par collaborateur, formation, direction, règle..." oninput="filterMatrixTable()" style="padding: 8px 14px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; width: 320px;">
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th>Collaborateur</th>
+                                    <th>Direction / Poste</th>
+                                    <th>Contrat</th>
+                                    <th>Formation assignée</th>
+                                    <th>Origine / Source</th>
+                                    <th>Date d'attribution</th>
+                                    <th style="text-align: center;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="matrix-tbody">
+                                <!-- Rempli dynamiquement -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================================================================= -->
+    <!-- ======================================================================= -->
+    <!-- PAGE EVALUATION & BENCHMARK RAG (CHROMA DB + GEMINI) - SUPER ADMIN ONLY -->
+    <!-- ======================================================================= -->

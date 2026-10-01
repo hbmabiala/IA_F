@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Plateforme de Formation IA - SGCI{% endblock %}</title>
+    <link rel="icon" href="/static/img/logo_sgci.png" type="image/png">
+    <!-- Polices d'Édition Internationale : Playfair Display & Plus Jakarta Sans & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <!-- Chart.js pour le tableau de bord analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <!-- Script PDF.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    </script>
+    {% block extra_head %}{% endblock %}
+    <style>
+        /* Affichage direct garanti pour la page active servie par le template dédié */
+        #app-main-content > .page {
+            display: flex !important;
+        }
+        #app-main-content > .page-presentation-view {
+            position: fixed !important;
+            top: 60px !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            display: flex !important;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        // Si non authentifié et sans session active, redirection immédiate vers /login
+        try {
+            if (!sessionStorage.getItem('ia_formation_user') && !localStorage.getItem('ia_formation_user')) {
+                if (document.cookie.indexOf('ia_user_role') === -1) {
+                    window.location.href = '/login';
+                }
+            }
+        } catch(e) {}
+    </script>
+
+    <!-- Halo interactif de lumière naturelle SGCI -->
+    <canvas id="ambientCanvas"></canvas>
+
+    <!-- Barre de navigation statique en haut avec Branding SGCI & MALAM'IA -->
+    {% include "components/header-nav.html" %}
+
+    <!-- Contenu spécifique de la page -->
+    <main id="app-main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Modale de consentement et traçabilité IA / RGPD SGCI -->
+    {% include "components/disclosure-modal.html" %}
+
+    <!-- Modales globales de l'application -->
+    {% include "components/modals.html" %}
+
+    <!-- Widget flottant Assistant IA MALAM'IA -->
+    {% include "components/assistant-widget.html" %}
+
+    <!-- Configuration -->
+    <script src="/static/js/config.js"></script>
+
+    <!-- JS Core : État global, Thèmes, Navigation & Authentification -->
+    <script src="/static/js/core/state.js"></script>
+    <script src="/static/js/core/theme.js"></script>
+    <script src="/static/js/core/router.js"></script>
+    <script src="/static/js/core/auth.js"></script>
+
+    <!-- JS Composants : Navigation & Modales -->
+    <script src="/static/js/components/navbar.js"></script>
+    <script src="/static/js/components/modals.js"></script>
+    <script src="/static/js/components/assistant-chat.js"></script>
+
+    <!-- JS Modules de Pages : Totalement Isolés par Domaine Fonctionnel -->
+    <script src="/static/js/pages/users.js"></script>
+    <script src="/static/js/pages/assignments.js"></script>
+    <script src="/static/js/pages/catalog.js"></script>
+    <script src="/static/js/pages/creation.js"></script>
+    <script src="/static/js/pages/presentation.js"></script>
+    <script src="/static/js/pages/live-tutor.js"></script>
+    <script src="/static/js/pages/evaluation.js"></script>
+    <script src="/static/js/pages/dashboard.js"></script>
+    <script src="/static/js/pages/rag-eval.js"></script>
+
+    <!-- Initialisation & Démarrage de l'Application -->
+    <script src="/static/js/main.js"></script>
+
+    <script>
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+      // Halo lumineux interactif
+      const canvas = document.getElementById('ambientCanvas');
+      if (canvas) {
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let mouse = { x: window.innerWidth * 0.5, y: window.innerHeight * 0.5 };
+        function resize() {
+          width = canvas.width = window.innerWidth;
+          height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        window.addEventListener('mousemove', (e) => {
+          mouse.x += (e.clientX - mouse.x) * 0.08;
+          mouse.y += (e.clientY - mouse.y) * 0.08;
+        });
+        resize();
+        function renderLight() {
+          ctx.clearRect(0, 0, width, height);
+          const gradient = ctx.createRadialGradient(mouse.x, mouse.y, 60, mouse.x, mouse.y, 500);
+          gradient.addColorStop(0, 'rgba(255, 252, 245, 0.45)');
+          gradient.addColorStop(0.6, 'rgba(245, 248, 255, 0.18)');
+          gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+          ctx.fillStyle = gradient;
+          ctx.fillRect(0, 0, width, height);
+          requestAnimationFrame(renderLight);
+        }
+        renderLight();
+      }
+    </script>
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

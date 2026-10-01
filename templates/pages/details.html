@@ -1,0 +1,122 @@
+    <div id="page-details" class="page active scrollable-page" style="padding: 20px 30px; width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box;">
+        <!-- Barre de navigation épurée de la page : Retour au catalogue, Titre, et Action support -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 16px; background: #ffffff; padding: 14px 22px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.04); border: 1px solid #e2e8f0; width: 100%; box-sizing: border-box;">
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <button onclick="navigateTo('consultation')" class="back-btn" style="margin-bottom: 0; padding: 8px 16px; background: #f8fafc; border-radius: 8px; font-weight: 700; color: #1e293b; border: 1px solid #cbd5e1; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13.5px;">
+                    ← Retour au catalogue
+                </button>
+                <h1 id="detail-title" style="margin: 0; font-size: 21px; color: #0f172a; font-weight: 800;">Titre de la formation</h1>
+            </div>
+
+            <!-- Boutons à droite : Évaluation, Support masqué par défaut & Téléchargement PDF -->
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <button id="detail-eval-btn" onclick="startCurrentCourseEvaluation()" class="action-btn-sm" style="background: #cbd5e1; color: #64748b; display: inline-flex; align-items: center; gap: 8px; font-weight: 700; padding: 9px 18px; border-radius: 8px; border: none; cursor: not-allowed; font-size: 13px; opacity: 0.85;" title="Veuillez suivre la formation jusqu'au bout pour débloquer l'évaluation" disabled>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    Évaluation verrouillée
+                </button>
+                <button id="toggle-doc-btn" onclick="toggleCourseDocumentPanel()" class="action-btn-sm" style="background: #0f172a; color: white; display: inline-flex; align-items: center; gap: 8px; font-weight: 700; padding: 9px 18px; border-radius: 8px; border: none; cursor: pointer; font-size: 13px;">
+                     Support de cours <span id="doc-badge-status" style="background: #334155; padding: 2px 8px; border-radius: 10px; font-size: 11px;">Masqué</span>
+                </button>
+                <a id="detail-download-pdf" href="#" download class="action-btn-sm" style="background: #f1f5f9; color: #000000; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-weight: 700; padding: 9px 16px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 13px;">
+                     Télécharger PDF
+                </a>
+                <a id="detail-download-pptx" href="#" download class="action-btn-sm" style="background: #f8fafc; color: #e9041e; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-weight: 700; padding: 9px 16px; border-radius: 8px; border: 1px solid #fca5a5; font-size: 13px;" title="Télécharger le support de présentation PowerPoint (PPTX)">
+                     Télécharger PPTX
+                </a>
+            </div>
+        </div>
+
+        <!-- Conteneur Principal : MALAM'IA AU CENTRE & DOCUMENT EN MINIATURE (MASQUÉ PAR DÉFAUT) -->
+        <div style="display: flex; gap: 28px; align-items: center; justify-content: center; width: 100%; min-height: 520px; position: relative;">
+            
+            <!-- CENTRE : MALAM'IA SEUL (SANS FOND NI SUPPORT) -->
+            <div id="hologram-main-container" style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px 0;">
+                
+                <!-- Statut MALAM'IA -->
+                <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 25px;">
+                    <span id="holo-status-pill" class="holo-status-idle">
+                        <span class="holo-pulse-dot"></span>
+                        <span id="holo-status-text">MALAM'IA en veille</span>
+                    </span>
+                </div>
+
+                <!-- Avatar Visuel MALAM'IA : Anneaux orbitaux + Cœur flottant (sans fond ni socle/support) -->
+                <div class="hologram-viewport" id="hologram-viewport">
+                    <div class="holo-ring holo-ring-outer"></div>
+                    <div class="holo-ring holo-ring-middle"></div>
+                    <div class="holo-ring holo-ring-inner"></div>
+
+                    <div class="holo-core" id="holo-core">
+                        <div class="holo-avatar-icon"></div>
+                        <div class="holo-waveform">
+                            <span class="wave-bar"></span>
+                            <span class="wave-bar"></span>
+                            <span class="wave-bar"></span>
+                            <span class="wave-bar"></span>
+                            <span class="wave-bar"></span>
+                            <span class="wave-bar"></span>
+                            <span class="wave-bar"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bouton principal d'activation vocale de MALAM'IA & Sélecteur de vitesse -->
+                <div style="margin-top: 25px; display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap;">
+                    <button id="holo-action-btn" onclick="toggleHologramDiscussion()" class="holo-btn-glow">
+                         Lancer la formation interactive
+                    </button>
+                    <div style="display: inline-flex; align-items: center; gap: 6px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 7px 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.04);" title="Vitesse d'élocution du Tuteur IA">
+                        <span style="font-size: 12px; font-weight: 700; color: #475569;">Vitesse :</span>
+                        <select id="live-speed-select" onchange="changeLiveTutorSpeed(this.value)" style="border: none; background: transparent; font-size: 13px; font-weight: 700; color: #e9041e; cursor: pointer; outline: none;">
+                            <option value="0.25">0.25x</option>
+                            <option value="0.5">0.5x</option>
+                            <option value="0.75">0.75x</option>
+                            <option value="1.0" selected>1.0x</option>
+                            <option value="1.25">1.25x</option>
+                            <option value="1.5">1.5x</option>
+                            <option value="1.75">1.75x</option>
+                            <option value="2.0">2.0x</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Sous-titre dynamique en temps réel -->
+                <div id="holo-speech-box" style="margin-top: 25px; width: 92%; max-width: 680px; min-height: 48px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px 22px; text-align: center; color: #1e293b; font-size: 14.5px; line-height: 1.5; box-shadow: 0 4px 15px rgba(0,0,0,0.04);">
+                    <span id="holo-speech-content" style="font-style: italic; color: #e9041e;">
+                        « Cliquez sur "Lancer la formation interactive" pour converser avec votre tuteur MALAM'IA. »
+                    </span>
+                </div>
+
+            </div>
+
+            <!-- À DROITE : LE DOCUMENT EN MODE MASQUÉ (VOLET MINIATURE PLUS GRAND) -->
+            <div id="course-document-drawer" class="doc-drawer-hidden" style="width: 480px; max-width: 92vw; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px; box-shadow: 0 8px 30px rgba(0,0,0,0.08); display: flex; flex-direction: column; flex-shrink: 0;">
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">
+                    <strong style="font-size: 14.5px; color: #0f172a; display: flex; align-items: center; gap: 8px;">Support de cours</strong>
+                    <button onclick="toggleCourseDocumentPanel(false)" style="background: none; border: none; font-size: 18px; cursor: pointer; color: #64748b; line-height: 1;" title="Masquer le support">
+                        &times;
+                    </button>
+                </div>
+
+                <!-- Navigation miniature des diapositives -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; background: #f8fafc; padding: 6px 12px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                    <button id="prev-slide" class="action-btn-sm" style="padding: 5px 12px; font-size: 12px; font-weight: 700; cursor: pointer;">◀ Précédent</button>
+                    <span style="font-size: 12.5px; font-weight: 700; color: #334155;">
+                        <span id="page-num">1</span> / <span id="page-count">1</span>
+                    </span>
+                    <button id="next-slide" class="action-btn-sm" style="padding: 5px 12px; font-size: 12px; font-weight: 700; cursor: pointer;">Suivant ▶</button>
+                </div>
+
+                <!-- Prévisualisation Miniature du PDF (agrandie pour une lecture confortable) -->
+                <div class="mini-pdf-box" style="background: #0f172a; border-radius: 8px; padding: 10px; display: flex; justify-content: center; align-items: center; min-height: 280px; overflow: hidden;">
+                    <canvas id="pdf-canvas" style="max-width: 100%; max-height: 380px; height: auto; border-radius: 4px; box-shadow: 0 4px 16px rgba(0,0,0,0.5); display: block;"></canvas>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="course-script" style="display: none;"></div>
+    </div>
+
+    <!-- Page Mode 1 : Présentation & Audio Synchronisé avec RAG -->

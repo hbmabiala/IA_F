@@ -1,0 +1,77 @@
+<!-- Modal de Disclosure & Consentement RGPD / AI Act avant Habilitation (Section 14) -->
+    <div id="disclosure-modal" class="modal-overlay" style="display: none; z-index: 10000;">
+        <div class="modal-content" style="max-width: 680px; max-height: 90vh; display: flex; flex-direction: column; padding: 0; overflow: hidden; border-radius: 14px;">
+            <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding: 22px 28px; color: white; display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid #e9041e;">
+                <div style="display: flex; align-items: center; gap: 14px;">
+                    <img src="static/img/logo.png" alt="SGCI" style="height: 36px; background: white; padding: 4px 8px; border-radius: 6px;">
+                    <div>
+                        <h2 style="margin: 0; font-size: 18px; font-weight: 800; color: white;">Transparence & Cadre d'Usage de l'IA (MALAM'IA)</h2>
+                        <span style="font-size: 12px; color: #cbd5e1;">Société Générale Côte d'Ivoire • Charte éthique & RGPD</span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="padding: 24px 28px; overflow-y: auto; flex: 1; font-size: 13.5px; color: #334155; line-height: 1.6;">
+                <!-- Filigrane animé officiel — Direction Innovation Digitale -->
+                <div class="watermark-strip-animated" style="margin-bottom: 18px;" title="Direction Innovation Digitale - SGCI">
+                    <div class="watermark-track">
+                        <span class="watermark-logo-txt">DIRECTION INNOVATION DIGITALE</span>
+                        <span class="watermark-sep">✦</span>
+                        <span class="watermark-copy">Habilitation & Cadre Éthique IA • Tous droits réservés © Société Générale Côte d'Ivoire</span>
+                        <span class="watermark-sep">✦</span>
+                        <span class="watermark-logo-txt">DIRECTION INNOVATION DIGITALE</span>
+                        <span class="watermark-sep">✦</span>
+                        <span class="watermark-copy">Tous droits réservés © SGCI</span>
+                    </div>
+                </div>
+
+                <div style="background: #f8fafc; border-left: 4px solid #e9041e; padding: 12px 16px; border-radius: 0 8px 8px 0; margin-bottom: 18px;">
+                    <strong>Information préalable obligatoire :</strong> Conformément aux règles de gouvernance interne de Société Générale Côte d'Ivoire et aux exigences réglementaires relatives à l'intelligence artificielle (notamment principes RGPD et cadre européen applicable à l'IA), l'accès à la solution MALAM'IA requiert votre consentement explicite.
+                </div>
+
+                <h4 style="color: #0f172a; margin: 14px 0 6px 0; font-size: 14.5px;">1. Rôle et fonctionnement de l'Intelligence Artificielle</h4>
+                <p style="margin: 0 0 10px 0;">
+                    MALAM'IA intègre des modèles d'intelligence artificielle générative pour synthétiser des contenus pédagogiques officiels de la banque, animer des parcours interactifs (voix de synthèse, réponses aux questions sur les supports) et proposer des diagnostics formatifs personnalisés.
+                </p>
+
+                <h4 style="color: #0f172a; margin: 14px 0 6px 0; font-size: 14.5px;">2. Limites technologiques et rôle de l'apprenant</h4>
+                <p style="margin: 0 0 10px 0;">
+                    L'IA est un outil d'assistance pédagogique et ne remplace ni l'encadrement humain ni l'esprit critique du collaborateur. Les réponses fournies sont indexées sur les documents de référence approuvés par la SGCI Academy.
+                </p>
+
+                <h4 style="color: #0f172a; margin: 14px 0 6px 0; font-size: 14.5px;">3. Protection des données et traçabilité</h4>
+                <p style="margin: 0 0 14px 0;">
+                    Vos données de session, questions et résultats d'évaluation sont strictly traitées dans l'environnement sécurisé SGCI à des fins exclusives de pilotage de la formation. Aucune donnée confidentielle bancaire ou personnelle n'est réutilisée pour entraîner des modèles publics tiers. Votre consentement est consigné et horodaté.
+                </p>
+
+                <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 16px; margin-top: 14px;">
+                    <div style="font-weight: 700; color: #b91c1c; margin-bottom: 10px; font-size: 13.5px;">Consentement obligatoire avant habilitation :</div>
+                    <label style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; cursor: pointer; font-size: 13px;">
+                        <input type="checkbox" id="consent-check-1" onchange="validateConsentCheckboxes()" style="margin-top: 3px; accent-color: #e9041e; width: 16px; height: 16px;">
+                        <span>J'ai pris connaissance du disclosure et des conditions d'utilisation de l'IA.</span>
+                    </label>
+                    <label style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; cursor: pointer; font-size: 13px;">
+                        <input type="checkbox" id="consent-check-2" onchange="validateConsentCheckboxes()" style="margin-top: 3px; accent-color: #e9041e; width: 16px; height: 16px;">
+                        <span>Je comprends qu'une intelligence artificielle intervient dans cette formation pour la narration, l'assistance et le diagnostic.</span>
+                    </label>
+                    <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 13px;">
+                        <input type="checkbox" id="consent-check-3" onchange="validateConsentCheckboxes()" style="margin-top: 3px; accent-color: #e9041e; width: 16px; height: 16px;">
+                        <span>J'accepte les conditions présentées et autorise la traçabilité de ma session de formation.</span>
+                    </label>
+                </div>
+            </div>
+
+            <div style="padding: 16px 28px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 12px; color: #64748b;">Version du Disclosure : 1.0 (Validée Compliance/SGCI)</span>
+                <button type="button" id="btn-accept-disclosure" onclick="submitUserConsent()" class="submit-btn" style="width: auto; padding: 10px 24px; font-size: 13.5px; font-weight: 700; background: #cbd5e1; border: none; cursor: not-allowed; border-radius: 8px;" disabled>
+                    Accepter et accéder à MALAM'IA →
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ecran de chargement -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="loader"></div>
+        <p>Analyse du document et création de la formation<br><small>Veuillez patienter</small></p>
+    </div>
